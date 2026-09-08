@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <radialGradient id="grad-btc" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#f7931a" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#e07a00" stop-opacity="1"/>
+    </radialGradient>
+    <filter id="shadow-btc" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+  <circle cx="50" cy="50" r="46" fill="url(#grad-btc)" stroke="rgba(255,255,255,0.25)" stroke-width="3" filter="url(#shadow-btc)"/>
+  <text x="50" y="62" font-size="44" text-anchor="middle" dominant-baseline="middle">₿</text>
+</svg>
