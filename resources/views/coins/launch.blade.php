@@ -53,11 +53,11 @@
             </div>
 
             <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 24px; font-size: 0.85rem; color: var(--text-secondary);">
-                💡 <strong>Fair Launch Guarantee:</strong> When the market cap reaches $69,000, $12,000 of liquidity is automatically deposited to simulated Raydium and burned.
+                <i class="fa-solid fa-lightbulb"></i> <strong>Fair Launch Guarantee:</strong> When the market cap reaches $69,000, $12,000 of liquidity is automatically deposited to simulated Raydium and burned.
             </div>
 
             <button type="submit" class="btn btn-primary" style="width: 100%; padding: 16px; font-size: 1.05rem; border-radius: var(--radius-md);">
-                🚀 Launch Coin On Bonding Curve
+                <i class="fa-solid fa-rocket"></i> Launch Coin On Bonding Curve
             </button>
         </form>
     </div>

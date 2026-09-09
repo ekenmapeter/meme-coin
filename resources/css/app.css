@@ -1,4 +1,10 @@
-@import 'tailwindcss';
+/*
+    Tailwind v4 WITHOUT preflight so the hand-written theme in public/css/style.css
+    keeps full control of base element styling. We only import the theme tokens
+    (CSS variables) and the utility layer.
+*/
+@import 'tailwindcss/theme' layer(theme);
+@import 'tailwindcss/utilities' layer(utilities);
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -6,6 +12,14 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --color-night: #07090e;
+    --color-surface: #0d121d;
+    --color-card: #121826;
+    --color-accent: #00f076;
+    --color-accent-dark: #059669;
+    --color-danger: #ff3b69;
+    --color-primary: #3b82f6;
+    --color-warn: #f59e0b;
+    --color-ink: #94a3b8;
 }

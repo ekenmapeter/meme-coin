@@ -35,12 +35,12 @@
                     <tr>
                         <td>
                             <div style="display: flex; align-items: center; gap: 10px;">
-                                <img src="{{ asset('images/coins/' . $coin->logo_path) }}" alt="{{ $coin->name }}" style="width: 32px; height: 32px; border-radius: 50%;" onerror="this.src='{{ asset('images/coins/pepeking.svg') }}'">
+                                <img src="{{ $coin->logo_url }}" alt="{{ $coin->name }}" style="width: 32px; height: 32px; border-radius: 50%;" onerror="this.src='{{ asset('images/coins/pepeking.svg') }}'">
                                 <div>
                                     <div style="font-weight: 700; display: flex; align-items: center; gap: 6px;">
                                         <span>{{ $coin->name }}</span>
                                         @if($coin->is_featured)
-                                            <span style="color: #f59e0b; font-size: 0.8rem;" title="Featured">★</span>
+                                            <span style="color: #f59e0b; font-size: 0.8rem;" title="Featured"><i class="fa-solid fa-star"></i></span>
                                         @endif
                                     </div>
                                     <div style="color: var(--text-muted); font-size: 0.75rem;">{{ $coin->ticker }}</div>
@@ -82,7 +82,7 @@
                                 </form>
                                 <form action="{{ route('admin.coins.deactivate', $coin->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Deactivate {{ $coin->ticker }}? Users keep their holdings but new trades are blocked. Use Pause to keep it visible but static.');">
                                     @csrf
-                                    <button type="submit" class="btn btn-danger btn-sm" style="padding: 5px 8px;" title="Deactivate (block new trades)">🚫</button>
+                                    <button type="submit" class="btn btn-danger btn-sm" style="padding: 5px 8px;" title="Deactivate (block new trades)"><i class="fa-solid fa-ban"></i></button>
                                 </form>
                             </div>
                         </td>

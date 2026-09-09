@@ -6,7 +6,7 @@
 <div class="section" style="max-width: 480px; padding-top: 40px;">
     <div class="widget-card" style="padding: 32px;">
         <div style="text-align: center; margin-bottom: 24px;">
-            <div style="font-size: 2.5rem; margin-bottom: 8px;">✨</div>
+            <div style="font-size: 2.5rem; margin-bottom: 8px;"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
             <h1 style="font-size: 1.8rem; font-weight: 800;">Create Account</h1>
             <p style="color: var(--text-secondary); font-size: 0.9rem;">Join Pump Endless and start trading simulated meme coins</p>
         </div>

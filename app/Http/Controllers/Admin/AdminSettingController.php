@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 
 class AdminSettingController extends Controller
 {
+    protected const ALLOWED_BRANDING = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
+
     public function index()
     {
         $settings = [
@@ -18,6 +20,10 @@ class AdminSettingController extends Controller
             'sol_usd_price' => PlatformSetting::get('sol_usd_price', '142.50'),
             'platform_name' => PlatformSetting::get('platform_name', 'Pump Endless'),
             'platform_announcement' => PlatformSetting::get('platform_announcement', 'Welcome to Pump Endless Demo Platform!'),
+            'site_name' => PlatformSetting::get('site_name', 'Pump Endless'),
+            'site_description' => PlatformSetting::get('site_description', 'Pump Endless – a high-speed demo meme-coin launch & trading platform.'),
+            'site_logo' => PlatformSetting::get('site_logo'),
+            'site_icon' => PlatformSetting::get('site_icon'),
         ];
 
         return view('admin.settings.index', compact('settings'));
@@ -32,6 +38,10 @@ class AdminSettingController extends Controller
             'sol_usd_price' => 'required|numeric|gt:0',
             'platform_name' => 'required|string|max:50',
             'platform_announcement' => 'nullable|string',
+            'site_name' => 'required|string|max:60',
+            'site_description' => 'nullable|string|max:500',
+            'site_logo' => 'nullable|image|mimes:'.implode(',', self::ALLOWED_BRANDING).'|max:2048',
+            'site_icon' => 'nullable|image|mimes:'.implode(',', self::ALLOWED_BRANDING).'|max:2048',
         ]);
 
         PlatformSetting::set('swap_fee_percent', $request->input('swap_fee_percent'));
@@ -40,6 +50,15 @@ class AdminSettingController extends Controller
         PlatformSetting::set('sol_usd_price', $request->input('sol_usd_price'));
         PlatformSetting::set('platform_name', $request->input('platform_name'));
         PlatformSetting::set('platform_announcement', $request->input('platform_announcement'));
+        PlatformSetting::set('site_name', $request->input('site_name'));
+        PlatformSetting::set('site_description', $request->input('site_description'));
+
+        if ($request->hasFile('site_logo')) {
+            PlatformSetting::set('site_logo', $this->storeBrandingFile($request->file('site_logo'), 'logo'));
+        }
+        if ($request->hasFile('site_icon')) {
+            PlatformSetting::set('site_icon', $this->storeBrandingFile($request->file('site_icon'), 'icon'));
+        }
 
         AuditLogger::record('settings.updated', null, $request->only([
             'swap_fee_percent',
@@ -47,8 +66,28 @@ class AdminSettingController extends Controller
             'btc_usd_price',
             'sol_usd_price',
             'platform_name',
+            'site_name',
+            'site_description',
         ]));
 
-        return back()->with('success', 'Platform settings and fees updated successfully.');
+        return back()->with('success', 'Platform settings, fees and website branding updated successfully.');
+    }
+
+    protected function storeBrandingFile($file, string $type): string
+    {
+        $extension = $file->guessExtension();
+        if (! in_array($extension, self::ALLOWED_BRANDING, true)) {
+            $extension = 'png';
+        }
+
+        $directory = public_path('images/branding');
+        if (! is_dir($directory)) {
+            mkdir($directory, 0755, true);
+        }
+
+        $fileName = $type.'_'.time().'.'.$extension;
+        $file->move($directory, $fileName);
+
+        return 'images/branding/'.$fileName;
     }
 }

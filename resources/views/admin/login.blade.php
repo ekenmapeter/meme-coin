@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administrator Login – Pump Endless</title>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') . '?v=' . @filemtime(public_path('css/style.css')) }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body style="display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #07090e;">
 
     <div class="widget-card" style="width: 100%; max-width: 440px; padding: 36px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); border-color: rgba(0, 240, 118, 0.3);">
         <div style="text-align: center; margin-bottom: 28px;">
-            <div class="brand-icon" style="margin: 0 auto 16px; width: 48px; height: 48px; font-size: 1.5rem;">👑</div>
+            <div class="brand-icon" style="margin: 0 auto 16px; width: 48px; height: 48px; font-size: 1.5rem;"><i class="fa-solid fa-crown"></i></div>
             <h1 style="font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px;">Admin Control Center</h1>
             <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">Pump Endless Management Portal</p>
         </div>

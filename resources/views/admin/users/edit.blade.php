@@ -5,11 +5,115 @@
 
 @section('content')
 
+@if($user->isSuspended())
+    <div class="alert alert-error">
+        <span><i class="fa-solid fa-ban"></i> This account is currently <strong>SUSPENDED</strong>. The user cannot sign in.</span>
+    </div>
+@elseif($user->isRestricted())
+    <div class="alert alert-warning">
+        <span><i class="fa-solid fa-lock"></i> This account is <strong>RESTRICTED</strong> from trading and swapping.</span>
+    </div>
+@endif
+
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
-    
+    <!-- Account Details & Role -->
+    <div class="widget-card">
+        <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 16px;"><i class="fa-solid fa-user"></i> Account Details & Role</h3>
+
+        <form action="{{ route('admin.users.update', $user->id) }}" method="POST">
+            @csrf
+
+            <div class="input-group">
+                <label class="input-label">Display Name</label>
+                <div class="input-field-wrap">
+                    <input type="text" name="name" value="{{ old('name', $user->name) }}" required maxlength="50">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Email Address</label>
+                <div class="input-field-wrap">
+                    <input type="email" name="email" value="{{ old('email', $user->email) }}" required maxlength="255">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Role</label>
+                <div class="input-field-wrap">
+                    <select name="role" {{ $user->is(Auth::user()) ? 'disabled' : '' }}>
+                        <option value="{{ \App\Models\User::ROLE_USER }}" {{ $user->role === \App\Models\User::ROLE_USER ? 'selected' : '' }}>Trader (User)</option>
+                        <option value="{{ \App\Models\User::ROLE_ADMIN }}" {{ $user->role === \App\Models\User::ROLE_ADMIN ? 'selected' : '' }}>Administrator</option>
+                    </select>
+                </div>
+                @if($user->is(Auth::user()))
+                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">You cannot change your own role.</div>
+                @endif
+            </div>
+
+            <div style="margin-top: 20px;">
+                <button type="submit" class="btn btn-primary" style="padding: 12px 28px;">
+                    <i class="fa-solid fa-floppy-disk"></i> Save Account
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Account Status & Danger Zone -->
+    <div class="widget-card">
+        <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 16px;"><i class="fa-solid fa-shield-halved"></i> Account Status</h3>
+
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+                <div>
+                    <div style="font-weight: 700;">Suspended</div>
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">Blocks the user from signing in.</div>
+                </div>
+                <form action="{{ route('admin.users.suspend', $user->id) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn {{ $user->isSuspended() ? 'btn-success' : 'btn-danger' }} btn-sm">
+                        <i class="fa-solid {{ $user->isSuspended() ? 'fa-user-check' : 'fa-user-slash' }}"></i>
+                        {{ $user->isSuspended() ? 'Unsuspend' : 'Suspend' }}
+                    </button>
+                </form>
+            </div>
+
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+                <div>
+                    <div style="font-weight: 700;">Restrict Trading</div>
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">Blocks buying, selling and swapping.</div>
+                </div>
+                <form action="{{ route('admin.users.restrict', $user->id) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-secondary btn-sm">
+                        <i class="fa-solid {{ $user->isRestricted() ? 'fa-lock-open' : 'fa-lock' }}"></i>
+                        {{ $user->isRestricted() ? 'Unrestrict' : 'Restrict' }}
+                    </button>
+                </form>
+            </div>
+
+            @unless($user->is(Auth::user()))
+                <div style="padding: 14px; background: rgba(255,59,105,0.06); border: 1px solid rgba(255,59,105,0.25); border-radius: var(--radius-md);">
+                    <div style="font-weight: 700; color: var(--accent-red); margin-bottom: 4px;">Danger Zone</div>
+                    <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
+                        Permanently deletes the user and all holdings, deposits, withdrawals and swaps.
+                    </div>
+                    <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Permanently delete {{ $user->name }} and all their data? This cannot be undone.');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            <i class="fa-solid fa-trash"></i> Delete User
+                        </button>
+                    </form>
+                </div>
+            @endunless
+        </div>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px;">
     <!-- Balance Adjustment Form -->
     <div class="widget-card">
-        <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 16px;">Adjust User Balances</h3>
+        <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 16px;"><i class="fa-solid fa-scale-balanced"></i> Adjust User Balances</h3>
 
         <form action="{{ route('admin.users.balance', $user->id) }}" method="POST">
             @csrf
@@ -40,7 +144,7 @@
 
             <div style="margin-top: 24px;">
                 <button type="submit" class="btn btn-primary" style="padding: 12px 28px;">
-                    Update User Balances
+                    <i class="fa-solid fa-wallet"></i> Update Balances
                 </button>
             </div>
         </form>
@@ -48,7 +152,7 @@
 
     <!-- User Portfolio Holdings -->
     <div class="widget-card">
-        <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 16px;">Current Token Holdings</h3>
+        <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 16px;"><i class="fa-solid fa-coins"></i> Current Token Holdings</h3>
 
         <table class="trades-table">
             <thead>
@@ -82,7 +186,6 @@
             </tbody>
         </table>
     </div>
-
 </div>
 
 @endsection

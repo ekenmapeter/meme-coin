@@ -12,7 +12,7 @@
         <!-- Quick Manual Price Override -->
         <div class="widget-card" style="border-color: rgba(0, 240, 118, 0.4); margin-bottom: 20px;">
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
-                <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--accent-green);">⚡ Live Price Override</h3>
+                <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--accent-green);"><i class="fa-solid fa-bolt"></i> Live Price Override</h3>
                 <span class="badge badge-success">{{ $coin->formatted_price }}</span>
             </div>
             <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 16px;">
@@ -34,7 +34,7 @@
         <!-- Simulated Trade Injector -->
         <div class="widget-card" style="margin-bottom: 20px;">
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
-                <h3 style="font-size: 1.15rem; font-weight: 800;">🎲 Inject Simulated Trade</h3>
+                <h3 style="font-size: 1.15rem; font-weight: 800;"><i class="fa-solid fa-dice"></i> Inject Simulated Trade</h3>
                 <span style="font-size: 0.8rem; color: var(--text-muted);">Bot Tape</span>
             </div>
             <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 16px;">
@@ -47,8 +47,8 @@
                     <div class="input-group" style="margin-bottom: 0;">
                         <label class="input-label">Trade Action</label>
                         <select name="type" style="width: 100%; background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 10px; border-radius: var(--radius-sm); font-weight: 700;">
-                            <option value="buy">🟢 Buy (Pumps Price Up)</option>
-                            <option value="sell">🔴 Sell (Pulls Price Down)</option>
+                            <option value="buy"><span class="status-dot" style="background:#22c55e"></span> Buy (Pumps Price Up)</option>
+                            <option value="sell"><span class="status-dot" style="background:#ef4444"></span> Sell (Pulls Price Down)</option>
                         </select>
                     </div>
 
@@ -130,7 +130,7 @@
             <div class="input-group">
                 <label class="input-label">Logo</label>
                 <div style="display: flex; align-items: center; gap: 12px;">
-                    <img src="{{ asset('images/coins/' . $coin->logo_path) }}" alt="{{ $coin->name }}" style="width: 36px; height: 36px; border-radius: 50%;" onerror="this.src='{{ asset('images/coins/pepeking.svg') }}'">
+                    <img src="{{ $coin->logo_url }}" alt="{{ $coin->name }}" style="width: 36px; height: 36px; border-radius: 50%;" onerror="this.src='{{ asset('images/coins/pepeking.svg') }}'">
                     <div class="input-field-wrap" style="flex: 1; padding: 6px 12px;">
                         <input type="file" name="logo" accept="image/*" style="font-size: 0.85rem;">
                     </div>

@@ -78,7 +78,7 @@
                         </div>
                         <div class="input-field-wrap" style="background: rgba(255,255,255,0.02);">
                             <div style="display: flex; align-items: center; gap: 8px; font-weight: 700;">
-                                <span style="font-size: 1.2rem;">₿</span>
+                                <span style="font-size: 1.2rem;"><i class="fa-solid fa-bitcoin-sign"></i></span>
                                 <span>Bitcoin (BTC)</span>
                             </div>
                             <input type="text" id="swapBtcOutput" placeholder="0.015212" readonly style="color: var(--accent-green); text-align: right;">

@@ -29,6 +29,8 @@ class User extends Authenticatable
         'wallet_address',
         'role',
         'avatar',
+        'is_suspended',
+        'is_restricted',
     ];
 
     /**
@@ -54,12 +56,24 @@ class User extends Authenticatable
             'sol_balance' => 'float',
             'btc_balance' => 'float',
             'usd_balance' => 'float',
+            'is_suspended' => 'boolean',
+            'is_restricted' => 'boolean',
         ];
     }
 
     public function isAdmin(): bool
     {
         return $this->role === self::ROLE_ADMIN;
+    }
+
+    public function isSuspended(): bool
+    {
+        return (bool) $this->is_suspended;
+    }
+
+    public function isRestricted(): bool
+    {
+        return (bool) $this->is_restricted;
     }
 
     public function holdings(): HasMany

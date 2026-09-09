@@ -85,7 +85,7 @@
                                         @csrf
                                         <input type="hidden" name="status" value="rejected">
                                         <button type="submit" class="btn btn-danger btn-sm" style="padding: 4px 8px; font-size: 0.75rem;">
-                                            ✕ Reject & Refund
+                                            <i class="fa-solid fa-xmark"></i> Reject & Refund
                                         </button>
                                     </form>
                                 @elseif($w->status === 'approved')
@@ -102,7 +102,7 @@
                                         @csrf
                                         <input type="hidden" name="status" value="rejected">
                                         <button type="submit" class="btn btn-danger btn-sm" style="padding: 4px 8px; font-size: 0.75rem;">
-                                            ✕ Reject & Refund
+                                            <i class="fa-solid fa-xmark"></i> Reject & Refund
                                         </button>
                                     </form>
                                 @else

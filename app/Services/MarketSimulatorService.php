@@ -182,6 +182,10 @@ class MarketSimulatorService
     public function executeUserTrade(User $user, Coin $coin, string $type, float $amount, string $currency = 'SOL'): array
     {
         return DB::transaction(function () use ($user, $coin, $type, $amount, $currency) {
+            if ($user->isRestricted()) {
+                throw new \Exception('Your account is restricted from trading. Please contact support.');
+            }
+
             if (! $coin->is_active) {
                 throw new \Exception('Trading for this coin is currently paused.');
             }
@@ -324,6 +328,10 @@ class MarketSimulatorService
     public function executeSwap(User $user, Coin $coin, float $tokenAmount): Swap
     {
         return DB::transaction(function () use ($user, $coin, $tokenAmount) {
+            if ($user->isRestricted()) {
+                throw new \Exception('Your account is restricted from swapping. Please contact support.');
+            }
+
             if (! $coin->is_active) {
                 throw new \Exception('Swapping this coin is currently paused.');
             }

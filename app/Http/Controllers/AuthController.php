@@ -27,6 +27,12 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
+            if (Auth::user()->isSuspended()) {
+                Auth::logout();
+
+                return back()->with('error', 'Your account has been suspended. Please contact support.');
+            }
+
             $request->session()->regenerate();
 
             return redirect()->intended(
@@ -98,6 +104,12 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
+            if (Auth::user()->isSuspended()) {
+                Auth::logout();
+
+                return back()->with('error', 'Your administrator account has been suspended.');
+            }
+
             $request->session()->regenerate();
 
             if (Auth::user()->isAdmin()) {

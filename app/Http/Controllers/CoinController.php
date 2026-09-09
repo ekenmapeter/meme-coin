@@ -23,6 +23,15 @@ class CoinController extends Controller
         $this->simulator = $simulator;
     }
 
+    public function index()
+    {
+        $coins = Coin::where('is_active', true)
+            ->orderBy('market_cap', 'desc')
+            ->paginate(15);
+
+        return view('coins.index', compact('coins'));
+    }
+
     public function show(string $ticker)
     {
         $coin = Coin::where('ticker', strtoupper($ticker))

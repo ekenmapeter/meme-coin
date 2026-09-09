@@ -129,4 +129,40 @@ class AuthTest extends TestCase
         $this->actingAs($user)->post(route('logout'))->assertRedirect(route('home'));
         $this->assertGuest();
     }
+
+    public function test_suspended_users_cannot_log_in(): void
+    {
+        $user = $this->createUser(['password' => 'secret-pass-123', 'is_suspended' => true]);
+
+        $this->post(route('login'), ['email' => $user->email, 'password' => 'secret-pass-123'])
+            ->assertSessionHas('error');
+
+        $this->assertGuest();
+    }
+
+    public function test_suspended_user_is_logged_out_of_active_sessions(): void
+    {
+        $user = $this->createUser();
+
+        $this->actingAs($user)->get(route('wallet.index'))->assertOk();
+
+        $user->forceFill(['is_suspended' => true])->save();
+
+        $this->get(route('wallet.index'))->assertRedirect(route('login'));
+        $this->assertGuest();
+    }
+
+    public function test_restricted_user_cannot_trade(): void
+    {
+        $user = $this->createUser(['is_restricted' => true]);
+        $user->sol_balance = 100;
+        $user->save();
+        $coin = $this->createCoin();
+
+        $this->actingAs($user)->postJson(route('coins.trade', $coin->ticker), [
+            'type' => 'buy',
+            'amount' => 1,
+            'currency' => 'SOL',
+        ])->assertStatus(422)->assertJson(['error' => true]);
+    }
 }

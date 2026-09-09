@@ -16,6 +16,7 @@
                     <th>SOL Balance</th>
                     <th>USD Balance</th>
                     <th>Role</th>
+                    <th>Status</th>
                     <th style="text-align: right;">Action</th>
                 </tr>
             </thead>
@@ -43,10 +44,42 @@
                                 {{ $u->isAdmin() ? 'Admin' : 'Trader' }}
                             </span>
                         </td>
+                        <td>
+                            @if($u->isSuspended())
+                                <span class="badge badge-danger"><i class="fa-solid fa-ban"></i> Suspended</span>
+                            @elseif($u->isRestricted())
+                                <span class="badge badge-warning"><i class="fa-solid fa-lock"></i> Restricted</span>
+                            @else
+                                <span class="badge badge-success">Active</span>
+                            @endif
+                        </td>
                         <td style="text-align: right;">
-                            <a href="{{ route('admin.users.edit', $u->id) }}" class="btn btn-secondary btn-sm" style="padding: 4px 10px; font-size: 0.75rem;">
-                                Edit Balances
-                            </a>
+                            <div style="display: inline-flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end;">
+                                <a href="{{ route('admin.users.edit', $u->id) }}" class="btn btn-secondary btn-sm" style="padding: 4px 10px; font-size: 0.75rem;">
+                                    <i class="fa-solid fa-pen"></i> Edit
+                                </a>
+                                @unless($u->is(Auth::user()))
+                                    <form action="{{ route('admin.users.suspend', $u->id) }}" method="POST" style="display: inline;">
+                                        @csrf
+                                        <button type="submit" class="btn {{ $u->isSuspended() ? 'btn-success' : 'btn-danger' }} btn-sm" style="padding: 4px 8px; font-size: 0.75rem;" title="{{ $u->isSuspended() ? 'Unsuspend' : 'Suspend' }}">
+                                            <i class="fa-solid {{ $u->isSuspended() ? 'fa-user-check' : 'fa-user-slash' }}"></i>
+                                        </button>
+                                    </form>
+                                    <form action="{{ route('admin.users.restrict', $u->id) }}" method="POST" style="display: inline;">
+                                        @csrf
+                                        <button type="submit" class="btn btn-secondary btn-sm" style="padding: 4px 8px; font-size: 0.75rem;" title="{{ $u->isRestricted() ? 'Unrestrict' : 'Restrict trading' }}">
+                                            <i class="fa-solid {{ $u->isRestricted() ? 'fa-lock-open' : 'fa-lock' }}"></i>
+                                        </button>
+                                    </form>
+                                    <form action="{{ route('admin.users.destroy', $u->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Permanently delete {{ $u->name }} and all their data? This cannot be undone.');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm" style="padding: 4px 8px; font-size: 0.75rem;" title="Delete user">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </form>
+                                @endunless
+                            </div>
                         </td>
                     </tr>
                 @endforeach

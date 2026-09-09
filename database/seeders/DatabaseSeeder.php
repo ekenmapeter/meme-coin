@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
         PlatformSetting::set('sol_usd_price', '142.50');
         PlatformSetting::set('platform_name', 'Pump Endless');
         PlatformSetting::set('platform_announcement', 'Welcome to Pump Endless! Trade simulated meme coins at lightning speed.');
+        PlatformSetting::set('site_name', 'Pump Endless');
+        PlatformSetting::set('site_description', 'Pump Endless – a high-speed demo meme-coin launch & trading platform. All prices and activity are simulated.');
 
         // 2. Deposit Methods (BTC & SOL only — each currency is credited to its matching balance)
         $btcMethod = DepositMethod::create([
@@ -253,7 +255,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'ZILLY',
                 'ticker' => 'ZILLY',
                 'description' => 'The pink menace taking over the Solana ecosystem with unstoppable meme energy.',
-                'logo_path' => 'zilly.png',
+                'logo_path' => 'zilly.svg',
                 'contract_address' => '8z8834abcd5678ef90gh12ij34kl56mn99',
                 'network' => 'Solana',
                 'current_price' => 0.000083,

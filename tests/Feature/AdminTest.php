@@ -146,9 +146,74 @@ class AdminTest extends TestCase
             'sol_usd_price' => '150',
             'platform_name' => 'Pump Endless',
             'platform_announcement' => 'Fees updated',
+            'site_name' => 'Pump Endless Pro',
+            'site_description' => 'A branded demo platform.',
         ])->assertSessionHas('success');
 
         $this->assertDatabaseHas('platform_settings', ['key' => 'swap_fee_percent', 'value' => '2.5']);
+        $this->assertDatabaseHas('platform_settings', ['key' => 'site_name', 'value' => 'Pump Endless Pro']);
         $this->assertDatabaseHas('audit_logs', ['actor_id' => $admin->id, 'event' => 'settings.updated']);
+    }
+
+    public function test_admin_can_suspend_and_unsuspend_user(): void
+    {
+        $admin = $this->createAdmin();
+        $user = $this->createUser();
+
+        $this->actingAs($admin)->post(route('admin.users.suspend', $user->id))->assertSessionHas('success');
+        $this->assertTrue($user->refresh()->isSuspended());
+
+        $this->actingAs($admin)->post(route('admin.users.suspend', $user->id))->assertSessionHas('success');
+        $this->assertFalse($user->refresh()->isSuspended());
+    }
+
+    public function test_admin_cannot_suspend_self(): void
+    {
+        $admin = $this->createAdmin();
+
+        $this->actingAs($admin)->post(route('admin.users.suspend', $admin->id))->assertSessionHas('error');
+        $this->assertFalse($admin->refresh()->isSuspended());
+    }
+
+    public function test_admin_can_restrict_and_unrestrict_user(): void
+    {
+        $admin = $this->createAdmin();
+        $user = $this->createUser();
+
+        $this->actingAs($admin)->post(route('admin.users.restrict', $user->id))->assertSessionHas('success');
+        $this->assertTrue($user->refresh()->isRestricted());
+
+        $this->actingAs($admin)->post(route('admin.users.restrict', $user->id))->assertSessionHas('success');
+        $this->assertFalse($user->refresh()->isRestricted());
+    }
+
+    public function test_admin_can_delete_regular_user_but_not_admin_or_self(): void
+    {
+        $admin = $this->createAdmin();
+        $user = $this->createUser();
+        $otherAdmin = $this->createUser(['email' => 'admin2@example.com', 'role' => 'admin']);
+
+        $this->actingAs($admin)->delete(route('admin.users.destroy', $user->id))->assertSessionHas('success');
+        $this->assertDatabaseMissing('users', ['id' => $user->id]);
+
+        $this->actingAs($admin)->delete(route('admin.users.destroy', $otherAdmin->id))->assertSessionHas('error');
+        $this->assertDatabaseHas('users', ['id' => $otherAdmin->id]);
+
+        $this->actingAs($admin)->delete(route('admin.users.destroy', $admin->id))->assertSessionHas('error');
+        $this->assertDatabaseHas('users', ['id' => $admin->id]);
+    }
+
+    public function test_admin_can_update_user_name_email_and_role(): void
+    {
+        $admin = $this->createAdmin();
+        $user = $this->createUser();
+
+        $this->actingAs($admin)->post(route('admin.users.update', $user->id), [
+            'name' => 'Renamed',
+            'email' => 'renamed@example.com',
+            'role' => 'user',
+        ])->assertSessionHas('success');
+
+        $this->assertDatabaseHas('users', ['id' => $user->id, 'name' => 'Renamed', 'email' => 'renamed@example.com']);
     }
 }

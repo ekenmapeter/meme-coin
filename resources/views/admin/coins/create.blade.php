@@ -87,7 +87,7 @@
 
         <!-- Simulation Controls -->
         <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; margin: 16px 0 24px;">
-            <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 12px; color: var(--accent-green);">🤖 Automatic Price Simulation Engine</h4>
+            <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 12px; color: var(--accent-green);"><i class="fa-solid fa-robot"></i> Automatic Price Simulation Engine</h4>
             
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
                 <div class="input-group" style="margin-bottom: 0;">

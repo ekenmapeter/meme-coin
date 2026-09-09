@@ -84,6 +84,19 @@ class Coin extends Model
         }
     }
 
+    /**
+     * Logo URL with a cache-busting version derived from the file's mtime.
+     * Guarantees replaced logos are never served from a stale browser cache
+     * (relevant when running under `php artisan serve`, which ignores .htaccess).
+     */
+    public function getLogoUrlAttribute(): string
+    {
+        $path = 'images/coins/'.$this->logo_path;
+        $version = @filemtime(public_path($path)) ?: 1;
+
+        return asset($path).'?v='.$version;
+    }
+
     public function getFormattedMarketCapAttribute(): string
     {
         return self::formatNumberAbbreviated($this->market_cap);

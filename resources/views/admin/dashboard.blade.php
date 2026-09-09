@@ -10,7 +10,7 @@
     <div class="kpi-card">
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <span class="kpi-title">Total Users</span>
-            <span style="font-size: 1.2rem;">👥</span>
+            <span style="font-size: 1.2rem;"><i class="fa-solid fa-users"></i></span>
         </div>
         <div class="kpi-value">{{ number_format($totalUsers) }}</div>
         <div style="font-size: 0.8rem; color: var(--text-muted);">
@@ -21,7 +21,7 @@
     <div class="kpi-card">
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <span class="kpi-title">Total Coins</span>
-            <span style="font-size: 1.2rem;">🪙</span>
+            <span style="font-size: 1.2rem;"><i class="fa-solid fa-coins"></i></span>
         </div>
         <div class="kpi-value">{{ $totalCoins }}</div>
         <div style="font-size: 0.8rem; color: var(--text-muted);">
@@ -32,7 +32,7 @@
     <div class="kpi-card">
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <span class="kpi-title">Total Volume</span>
-            <span style="font-size: 1.2rem;">📊</span>
+            <span style="font-size: 1.2rem;"><i class="fa-solid fa-chart-simple"></i></span>
         </div>
         <div class="kpi-value">${{ number_format($totalVolume / 1000000, 2) }}M</div>
         <div style="font-size: 0.8rem; color: var(--text-muted);">
@@ -43,7 +43,7 @@
     <div class="kpi-card">
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <span class="kpi-title">Total Fees</span>
-            <span style="font-size: 1.2rem;">💰</span>
+            <span style="font-size: 1.2rem;"><i class="fa-solid fa-sack-dollar"></i></span>
         </div>
         <div class="kpi-value">${{ number_format($totalFees, 0) }}</div>
         <div style="font-size: 0.8rem; color: var(--text-muted);">
@@ -78,7 +78,7 @@
                         <tr>
                             <td>
                                 <div style="display: flex; align-items: center; gap: 10px;">
-                                    <img src="{{ asset('images/coins/' . $coin->logo_path) }}" alt="{{ $coin->name }}" style="width: 28px; height: 28px; border-radius: 50%;" onerror="this.src='{{ asset('images/coins/pepeking.svg') }}'">
+                                    <img src="{{ $coin->logo_url }}" alt="{{ $coin->name }}" style="width: 28px; height: 28px; border-radius: 50%;" onerror="this.src='{{ asset('images/coins/pepeking.svg') }}'">
                                     <div>
                                         <strong style="font-size: 0.9rem;">{{ $coin->name }}</strong>
                                         <div style="font-size: 0.75rem; color: var(--text-muted);">{{ $coin->ticker }}</div>
@@ -90,10 +90,10 @@
                             <td style="font-family: var(--font-mono);">{{ $coin->formatted_holders }}</td>
                             <td style="text-align: right;">
                                 <div style="display: inline-flex; gap: 6px;">
-                                    <a href="{{ route('admin.coins.edit', $coin->id) }}" class="btn btn-secondary btn-sm" style="padding: 4px 8px;" title="Edit & Control">✏️</a>
+                                    <a href="{{ route('admin.coins.edit', $coin->id) }}" class="btn btn-secondary btn-sm" style="padding: 4px 8px;" title="Edit & Control"><i class="fa-solid fa-pen"></i></a>
                                     <form action="{{ route('admin.coins.toggleFeature', $coin->id) }}" method="POST" style="display: inline;">
                                         @csrf
-                                        <button type="submit" class="btn btn-secondary btn-sm" style="padding: 4px 8px; {{ $coin->is_featured ? 'color: #f59e0b;' : '' }}" title="Toggle Pin/Feature">★</button>
+                                        <button type="submit" class="btn btn-secondary btn-sm" style="padding: 4px 8px; {{ $coin->is_featured ? 'color: #f59e0b;' : '' }}" title="Toggle Pin/Feature"><i class="fa-solid fa-star"></i></button>
                                     </form>
                                     <form action="{{ route('admin.coins.togglePause', $coin->id) }}" method="POST" style="display: inline;">
                                         @csrf
@@ -123,7 +123,7 @@
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <span style="font-weight: 800; color: var(--text-muted); font-size: 0.8rem;">#{{ $idx + 1 }}</span>
                         <div style="font-family: var(--font-mono); font-size: 0.88rem; font-weight: 600;">
-                            👾 {{ $trader['wallet'] }}
+                            <i class="fa-solid fa-gamepad"></i> {{ $trader['wallet'] }}
                         </div>
                     </div>
                     <div style="font-family: var(--font-mono); font-weight: 700; color: var(--accent-green);">
@@ -162,7 +162,7 @@
                 <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: var(--bg-secondary); border-radius: var(--radius-sm);">
                     <div>
                         <div style="display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 0.85rem; font-weight: 600;">
-                            <span>👾</span>
+                            <span><i class="fa-solid fa-gamepad"></i></span>
                             <span>{{ $dep->user ? substr($dep->user->wallet_address ?? '0x8f...a1b2', 0, 8) . '...' : 'Unknown' }}</span>
                         </div>
                         <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">

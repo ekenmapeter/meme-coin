@@ -14,7 +14,7 @@
     <!-- Coin Header matching coin-page.png -->
     <div class="coin-page-header">
         <div class="coin-page-title">
-            <img src="{{ asset('images/coins/' . $coin->logo_path) }}" alt="{{ $coin->name }}" class="coin-page-avatar" onerror="this.src='{{ asset('images/coins/pepeking.svg') }}'">
+            <img src="{{ $coin->logo_url }}" alt="{{ $coin->name }}" class="coin-page-avatar" onerror="this.src='{{ asset('images/coins/pepeking.svg') }}'">
             <div>
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <h1 style="font-size: 2rem; font-weight: 900; letter-spacing: -0.5px;">{{ $coin->name }}</h1>
@@ -132,7 +132,7 @@
                                 <tr>
                                     <td>
                                         <div style="display: flex; align-items: center; gap: 8px; font-family: var(--font-mono);">
-                                            <span>👾</span>
+                                            <span><i class="fa-solid fa-gamepad"></i></span>
                                             <span>{{ $trade->short_wallet }}</span>
                                         </div>
                                     </td>
@@ -210,7 +210,7 @@
                         <div class="input-field-wrap" style="background: rgba(255,255,255,0.02);">
                             <input type="text" id="tradeReceivePreview" placeholder="0.0" readonly style="color: var(--accent-green);">
                             <div style="display: flex; align-items: center; gap: 6px; background: var(--bg-secondary); padding: 4px 10px; border-radius: var(--radius-full); font-size: 0.85rem; font-weight: 700;" id="receiveCurrencyBadge">
-                                <img src="{{ asset('images/coins/' . $coin->logo_path) }}" style="width: 16px; height: 16px; border-radius: 50%;" onerror="this.src='{{ asset('images/coins/pepeking.svg') }}'">
+                                <img src="{{ $coin->logo_url }}" style="width: 16px; height: 16px; border-radius: 50%;" onerror="this.src='{{ asset('images/coins/pepeking.svg') }}'">
                                 <span>{{ $coin->ticker }}</span>
                             </div>
                         </div>
@@ -306,7 +306,7 @@
             labelPay.innerText = 'You Pay';
             labelReceive.innerText = 'You Receive';
             payBadge.innerHTML = '<span>◎</span><span>SOL</span>';
-            receiveBadge.innerHTML = `<img src="/images/coins/{{ $coin->logo_path }}" style="width:16px;height:16px;border-radius:50%;" onerror="this.src='/images/coins/pepeking.svg'"><span>{{ $coin->ticker }}</span>`;
+            receiveBadge.innerHTML = `<img src="{{ $coin->logo_url }}" style="width:16px;height:16px;border-radius:50%;" onerror="this.src='/images/coins/pepeking.svg'"><span>{{ $coin->ticker }}</span>`;
             payBalance.innerText = userSolBalance.toFixed(4) + ' SOL';
         } else {
             tabSell.classList.add('active');
@@ -317,7 +317,7 @@
             }
             labelPay.innerText = 'You Sell';
             labelReceive.innerText = 'You Receive';
-            payBadge.innerHTML = `<img src="/images/coins/{{ $coin->logo_path }}" style="width:16px;height:16px;border-radius:50%;" onerror="this.src='/images/coins/pepeking.svg'"><span>{{ $coin->ticker }}</span>`;
+            payBadge.innerHTML = `<img src="{{ $coin->logo_url }}" style="width:16px;height:16px;border-radius:50%;" onerror="this.src='/images/coins/pepeking.svg'"><span>{{ $coin->ticker }}</span>`;
             receiveBadge.innerHTML = '<span>◎</span><span>SOL</span>';
             payBalance.innerText = Number(userTokenBalance).toLocaleString() + ' {{ $coin->ticker }}';
         }
@@ -541,7 +541,7 @@
                     <tr>
                         <td>
                             <div style="display:flex; align-items:center; gap:8px; font-family:var(--font-mono);">
-                                <span>👾</span>
+                                <span><i class="fa-solid fa-gamepad"></i></span>
                                 <span>${t.wallet}</span>
                             </div>
                         </td>

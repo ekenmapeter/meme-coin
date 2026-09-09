@@ -19,8 +19,10 @@ use Illuminate\Support\Facades\Route;
 */
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/search', [HomeController::class, 'search'])->name('search');
+Route::get('/api/market/live', [HomeController::class, 'liveMarket'])->name('api.market.live');
 
 // Coin & Trading
+Route::get('/coins', [CoinController::class, 'index'])->name('coins.index');
 Route::get('/coins/{ticker}', [CoinController::class, 'show'])->name('coins.show');
 Route::get('/api/coins/{ticker}/chart', [CoinController::class, 'chartData'])->name('api.coins.chart');
 Route::get('/api/coins/{ticker}/trades', [CoinController::class, 'trades'])->name('api.coins.trades');
@@ -47,7 +49,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 | Authenticated User Routes (Wallet, Swap, Deposit, Withdrawal)
 |--------------------------------------------------------------------------
 */
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'active'])->group(function () {
     Route::get('/wallet', [WalletController::class, 'index'])->name('wallet.index');
     Route::get('/swap', function () {
         return redirect()->route('wallet.index', ['tab' => 'swap']);
@@ -78,7 +80,7 @@ Route::get('/leaderboard', function () {
 | Admin Routes
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'active', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard.redirect');
 
@@ -107,4 +109,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
     Route::get('/users/{user}/edit', [AdminUserController::class, 'edit'])->name('users.edit');
     Route::post('/users/{user}/balance', [AdminUserController::class, 'updateBalance'])->name('users.balance');
+    Route::post('/users/{user}/update', [AdminUserController::class, 'update'])->name('users.update');
+    Route::post('/users/{user}/suspend', [AdminUserController::class, 'toggleSuspend'])->name('users.suspend');
+    Route::post('/users/{user}/restrict', [AdminUserController::class, 'toggleRestrict'])->name('users.restrict');
+    Route::delete('/users/{user}', [AdminUserController::class, 'destroy'])->name('users.destroy');
 });

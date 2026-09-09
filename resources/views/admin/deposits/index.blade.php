@@ -23,7 +23,7 @@
     </div>
 
     <a href="#wallet-config" class="btn btn-secondary btn-sm">
-        ⚙️ Configure Deposit Addresses
+        <i class="fa-solid fa-gear"></i> Configure Deposit Addresses
     </a>
 </div>
 
@@ -79,7 +79,7 @@
                                         @csrf
                                         <input type="hidden" name="status" value="confirmed">
                                         <button type="submit" class="btn btn-primary btn-sm" style="padding: 4px 10px; font-size: 0.75rem;" title="Approve & Credit Balance">
-                                            ✓ Confirm & Credit
+                                            <i class="fa-solid fa-check"></i> Confirm & Credit
                                         </button>
                                     </form>
                                 @endif
@@ -89,7 +89,7 @@
                                         @csrf
                                         <input type="hidden" name="status" value="rejected">
                                         <button type="submit" class="btn btn-danger btn-sm" style="padding: 4px 8px; font-size: 0.75rem;" title="Reject">
-                                            ✕ Reject
+                                            <i class="fa-solid fa-xmark"></i> Reject
                                         </button>
                                     </form>
                                 @endif
@@ -125,7 +125,7 @@
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <span style="font-size: 1.4rem;">
-                            {{ $method->currency === 'BTC' ? '₿' : ($method->currency === 'ETH' ? 'Ξ' : ($method->currency === 'SOL' ? '◎' : '₮')) }}
+                            {{ $method->currency === 'BTC' ? '<i class="fa-solid fa-bitcoin-sign"></i>' : ($method->currency === 'ETH' ? 'Ξ' : ($method->currency === 'SOL' ? '◎' : '₮')) }}
                         </span>
                         <h4 style="font-weight: 800;">{{ $method->name }}</h4>
                     </div>

@@ -131,17 +131,25 @@ button, input, select, textarea {
 .header-container {
   max-width: 1440px;
   margin: 0 auto;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 24px;
+}
+
+.header-center {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 20px;
+  justify-content: center;
+  gap: 28px;
+  min-width: 0;
 }
 
 .brand {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 1.4rem;
+  font-size: 1rem;
   font-weight: 800;
   letter-spacing: -0.5px;
 }
@@ -247,7 +255,20 @@ button, input, select, textarea {
 .user-nav-actions {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 14px;
+}
+
+@media (max-width: 1200px) {
+  .header-container {
+    gap: 16px;
+  }
+  .header-center {
+    gap: 18px;
+  }
+  .search-box {
+    min-width: 210px;
+  }
 }
 
 /* Hero Section */
@@ -336,8 +357,29 @@ button, input, select, textarea {
 
 .coins-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(5, 1fr);
   gap: 18px;
+}
+
+@media (max-width: 1200px) {
+  .coins-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+@media (max-width: 992px) {
+  .coins-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 640px) {
+  .coins-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 480px) {
+  .coins-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .coin-card {
@@ -751,7 +793,139 @@ button, input, select, textarea {
   font-size: 0.85rem;
 }
 
-/* Responsive */
+/* ===== Footer ===== */
+.footer-links-row {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px 26px;
+}
+.footer-links-row a {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.15s ease;
+}
+.footer-links-row a:hover {
+  color: var(--text-primary);
+}
+.footer-social {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+.footer-social:hover {
+  color: var(--accent-green);
+  border-color: rgba(0, 240, 118, 0.4);
+  box-shadow: 0 0 12px var(--accent-green-glow);
+  transform: translateY(-2px);
+}
+
+/* ===== Coin leaderboard (home) ===== */
+.coin-leaderboard {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.coin-leaderboard-row {
+  display: grid;
+  grid-template-columns: 34px 38px minmax(0, 1fr) auto auto 110px 18px;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.15s ease, border-color 0.15s ease;
+  position: relative;
+}
+.coin-leaderboard-row:last-child {
+  border-bottom: none;
+}
+.coin-leaderboard-row:hover {
+  background: var(--bg-card-hover);
+}
+.coin-leaderboard-row:hover .coin-leaderboard-arrow {
+  color: var(--accent-green);
+  transform: translateX(3px);
+}
+.coin-rank {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+.coin-leaderboard-row:nth-child(-n + 3) .coin-rank {
+  color: var(--accent-green);
+  text-shadow: 0 0 10px var(--accent-green-glow);
+}
+.coin-leaderboard-img {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--bg-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.coin-leaderboard-name {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.coin-leaderboard-title {
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.coin-leaderboard-ticker {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.coin-leaderboard-price {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: right;
+}
+.coin-leaderboard-mcap {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  text-align: right;
+}
+.coin-leaderboard-arrow {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  text-align: center;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+@media (max-width: 640px) {
+  .coin-leaderboard-row {
+    grid-template-columns: 26px 34px minmax(0, 1fr) auto auto 14px;
+    gap: 10px;
+    padding: 11px 14px;
+  }
+  .coin-leaderboard-mcap {
+    display: none;
+  }
+}
+
+/* ===== Responsive = */
 @media (max-width: 1024px) {
   .hero-grid {
     grid-template-columns: 1fr;
@@ -778,7 +952,241 @@ button, input, select, textarea {
   .nav-links {
     display: none;
   }
+  .header-center {
+    display: none;
+  }
   .header-container {
-    flex-wrap: wrap;
+    display: flex;
+    /* flex-wrap: wrap; */
+    justify-content: space-between;
+    gap: 12px;
   }
 }
+
+/* ===== Live buy notification toasts (frontpage) ===== */
+.toast-stack {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none;
+  max-width: min(380px, calc(100vw - 48px));
+}
+.buy-toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-left: 3px solid var(--accent-green);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+  animation: toastIn 0.35s ease;
+}
+.buy-toast-leaving {
+  animation: toastOut 0.4s ease forwards;
+}
+.buy-toast-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+.buy-toast-body {
+  flex: 1;
+  min-width: 0;
+}
+.buy-toast-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.buy-trader {
+  color: var(--accent-blue);
+}
+.buy-toast-sub {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 3px;
+}
+.buy-toast-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.8rem;
+  padding: 4px;
+}
+.buy-toast-close:hover {
+  color: var(--text-primary);
+}
+
+/* ===== Live price flash on the frontpage ===== */
+.flash-up {
+  animation: flashUp 1.2s ease;
+}
+.flash-down {
+  animation: flashDown 1.2s ease;
+}
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes toastOut {
+  to { opacity: 0; transform: translateX(30px); }
+}
+@keyframes flashUp {
+  0%   { color: var(--accent-green); text-shadow: 0 0 12px var(--accent-green-glow); }
+  100% { color: inherit; text-shadow: none; }
+}
+@keyframes flashDown {
+  0%   { color: var(--accent-red); text-shadow: 0 0 12px var(--accent-red-glow); }
+  100% { color: inherit; text-shadow: none; }
+}
+@media (max-width: 640px) {
+  .toast-stack {
+    bottom: 16px;
+    right: 16px;
+    left: 16px;
+  }
+}
+
+/* ===== Alpine.js ===== */
+[x-cloak] {
+  display: none !important;
+}
+
+/* ===== Branding ===== */
+.brand-img {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ===== Mobile bottom navigation ===== */
+.bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: rgba(10, 15, 26, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.bottom-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex: 1;
+  padding: 10px 4px 8px;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+.bottom-nav-item i {
+  font-size: 1.15rem;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+.bottom-nav-item.active {
+  color: var(--accent-green);
+}
+.bottom-nav-item.active i {
+  transform: translateY(-1px);
+  text-shadow: 0 0 12px var(--accent-green-glow);
+}
+.bottom-nav-item:hover {
+  color: var(--text-primary);
+}
+@media (max-width: 767px) {
+  .bottom-nav {
+    display: flex;
+  }
+}
+
+/* ===== Mobile drawer ===== */
+.drawer-panel {
+  background: linear-gradient(165deg, #101828 0%, #0a0f1a 100%);
+  display: flex;
+  flex-direction: column;
+  box-shadow: -20px 0 60px rgba(0, 0, 0, 0.6);
+  border-left: 1px solid rgba(255, 255, 255, 0.06);
+}
+.drawer-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  transition: background 0.15s ease;
+}
+.drawer-link:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ===== Scroll reveal ===== */
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal.revealed {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ===== Futuristic accents ===== */
+.status-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  box-shadow: 0 0 10px currentColor;
+  vertical-align: middle;
+}
+.glow-card {
+  position: relative;
+  overflow: hidden;
+}
+.glow-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(0, 240, 118, 0.4), rgba(59, 130, 246, 0.15), transparent 60%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
