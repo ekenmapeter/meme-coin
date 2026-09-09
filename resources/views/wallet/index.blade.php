@@ -5,7 +5,7 @@
 @section('content')
 <div class="section" style="padding-top: 20px;">
 
-    <div style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 24px; align-items: start; margin-bottom: 24px;">
+    <div class="wallet-grid">
         
         <!-- Left Column: Total Balance Card & Swap Widget -->
         <div>
@@ -232,7 +232,7 @@
         <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
             <h3 style="font-size: 1.3rem; font-weight: 800;">Transaction History</h3>
             
-            <div style="display: flex; gap: 8px;">
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                 <button type="button" class="btn btn-secondary btn-sm filter-tx-btn active" onclick="filterTransactions('All', this)" style="background: var(--bg-card); border-color: var(--accent-green); color: var(--accent-green);">All</button>
                 <button type="button" class="btn btn-secondary btn-sm filter-tx-btn" onclick="filterTransactions('Swap', this)">Swap</button>
                 <button type="button" class="btn btn-secondary btn-sm filter-tx-btn" onclick="filterTransactions('Deposit', this)">Deposit</button>

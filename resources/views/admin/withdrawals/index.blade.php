@@ -47,7 +47,7 @@
                     <tr>
                         <td style="font-family: var(--font-mono);">#{{ $w->id }}</td>
                         <td>
-                            <div style="font-weight: 700;">{{ $w->user->name ?? 'Trader' }}</div>
+                            <a href="{{ route('admin.users.edit', $w->user_id) }}" style="font-weight: 700;">{{ $w->user->name ?? 'Trader' }}</a>
                             <div style="font-size: 0.75rem; color: var(--text-muted);">{{ $w->user->email ?? '' }}</div>
                         </td>
                         <td style="font-family: var(--font-mono); font-weight: 700;">

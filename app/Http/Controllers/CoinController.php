@@ -116,6 +116,29 @@ class CoinController extends Controller
                 ];
             });
 
+        // Buy / sell pressure from the last 100 trades
+        $recent = CoinTrade::where('coin_id', $coin->id)
+            ->latest()
+            ->take(100)
+            ->get(['type', 'usd_amount']);
+
+        $buyCount = $recent->where('type', 'buy')->count();
+        $sellCount = $recent->where('type', 'sell')->count();
+        $buyVolume = (float) $recent->where('type', 'buy')->sum('usd_amount');
+        $sellVolume = (float) $recent->where('type', 'sell')->sum('usd_amount');
+        $totalVolume = $buyVolume + $sellVolume;
+        $buyPressure = $totalVolume > 0 ? round(($buyVolume / $totalVolume) * 100, 1) : 50;
+
+        // 24h high / low from today's candles
+        $todayCandle = PriceHistory::where('coin_id', $coin->id)
+            ->where('timeframe', '1D')
+            ->whereDate('candle_time', now()->toDateString())
+            ->orderBy('candle_time', 'desc')
+            ->first();
+
+        $high24h = $todayCandle ? (float) $todayCandle->high : (float) $coin->current_price;
+        $low24h = $todayCandle ? (float) $todayCandle->low : (float) $coin->current_price;
+
         return response()->json([
             'current_price' => $coin->current_price,
             'formatted_price' => $coin->formatted_price,
@@ -124,6 +147,15 @@ class CoinController extends Controller
             'volume_24h' => $coin->formatted_volume,
             'holders' => $coin->formatted_holders,
             'buyers' => number_format($coin->buyers_count),
+            'liquidity' => $coin->formatted_liquidity,
+            'total_supply' => $coin->formatted_total_supply,
+            'high_24h' => Coin::formatPriceShort((float) $high24h),
+            'low_24h' => Coin::formatPriceShort((float) $low24h),
+            'buy_count' => $buyCount,
+            'sell_count' => $sellCount,
+            'buy_pressure' => $buyPressure,
+            'sell_volume' => number_format($sellVolume, 0),
+            'buy_volume' => number_format($buyVolume, 0),
             'trades' => $trades,
         ]);
     }

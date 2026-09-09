@@ -13,7 +13,9 @@ class AuthController extends Controller
     public function showLogin()
     {
         if (Auth::check()) {
-            return redirect()->intended(route('home'));
+            return redirect()->intended(
+                Auth::user()->isAdmin() ? route('admin.dashboard') : route('dashboard')
+            );
         }
 
         return view('auth.login');
@@ -36,7 +38,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             return redirect()->intended(
-                Auth::user()->isAdmin() ? route('admin.dashboard') : route('home')
+                Auth::user()->isAdmin() ? route('admin.dashboard') : route('dashboard')
             );
         }
 
@@ -48,7 +50,9 @@ class AuthController extends Controller
     public function showRegister()
     {
         if (Auth::check()) {
-            return redirect()->route('home');
+            return redirect()->intended(
+                Auth::user()->isAdmin() ? route('admin.dashboard') : route('dashboard')
+            );
         }
 
         return view('auth.register');
@@ -82,7 +86,7 @@ class AuthController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect()->route('home')->with('success', 'Account created! Welcome to Pump Endless.');
+        return redirect()->route('dashboard')->with('success', 'Account created! Welcome to Pump Endless.');
     }
 
     public function showAdminLogin()

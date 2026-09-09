@@ -107,6 +107,27 @@ class Coin extends Model
         return self::formatNumberAbbreviated($this->volume_24h);
     }
 
+    public function getFormattedLiquidityAttribute(): string
+    {
+        return self::formatNumberAbbreviated($this->liquidity);
+    }
+
+    public function getFormattedTotalSupplyAttribute(): string
+    {
+        return self::formatNumberAbbreviated($this->total_supply, false);
+    }
+
+    public static function formatPriceShort(float $price): string
+    {
+        if ($price < 0.0001) {
+            return '$'.rtrim(sprintf('%.8f', $price), '0');
+        } elseif ($price < 1) {
+            return '$'.sprintf('%.6f', $price);
+        }
+
+        return '$'.number_format($price, 4);
+    }
+
     public function getFormattedHoldersAttribute(): string
     {
         return self::formatNumberAbbreviated($this->holders_count, false);

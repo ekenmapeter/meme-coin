@@ -37,7 +37,7 @@ class AuthTest extends TestCase
             'password_confirmation' => 'secret-pass-123',
         ]);
 
-        $response->assertRedirect(route('home'));
+        $response->assertRedirect(route('dashboard'));
         $this->assertAuthenticated();
 
         $user = User::where('email', 'new@example.com')->firstOrFail();
@@ -85,11 +85,11 @@ class AuthTest extends TestCase
     {
         $user = $this->createUser();
 
-        $this->actingAs($user)->get(route('login'))->assertRedirect(route('home'));
-        $this->actingAs($user)->get(route('register'))->assertRedirect(route('home'));
+        $this->actingAs($user)->get(route('login'))->assertRedirect(route('dashboard'));
+        $this->actingAs($user)->get(route('register'))->assertRedirect(route('dashboard'));
     }
 
-    public function test_login_redirects_admins_to_dashboard_and_users_to_home(): void
+    public function test_login_redirects_admins_to_dashboard_and_users_to_user_dashboard(): void
     {
         $admin = $this->createAdmin(['password' => 'admin-secret-pass']);
         $user = $this->createUser(['password' => 'user-secret-pass']);
@@ -100,7 +100,7 @@ class AuthTest extends TestCase
         $this->post(route('logout'));
 
         $this->post(route('login'), ['email' => $user->email, 'password' => 'user-secret-pass'])
-            ->assertRedirect(route('home'));
+            ->assertRedirect(route('dashboard'));
     }
 
     public function test_admin_login_rejects_non_admin_users(): void

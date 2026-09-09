@@ -125,7 +125,7 @@ button, input, select, textarea {
   background: rgba(7, 9, 14, 0.88);
   backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border-color);
-  padding: 14px 24px;
+padding: 14px 16px;
 }
 
 .header-container {
@@ -274,7 +274,7 @@ button, input, select, textarea {
 /* Hero Section */
 .hero {
   position: relative;
-  padding: 60px 24px 40px;
+  padding: 60px 16px 40px;
   overflow: hidden;
   max-width: 1440px;
   margin: 0 auto;
@@ -335,7 +335,7 @@ button, input, select, textarea {
 .section {
   max-width: 1440px;
   margin: 0 auto;
-  padding: 30px 24px;
+  padding: 30px 16px;
   width: 100%;
 }
 
@@ -522,6 +522,9 @@ button, input, select, textarea {
   gap: 24px;
   align-items: start;
 }
+.coin-detail-layout > div {
+  min-width: 0;
+}
 
 /* Trading & Order Widget */
 .widget-card {
@@ -583,12 +586,18 @@ button, input, select, textarea {
 }
 .input-field-wrap input {
   flex: 1;
+  min-width: 0;
   background: transparent;
   border: none;
   color: var(--text-primary);
   font-family: var(--font-mono);
   font-size: 1.1rem;
   font-weight: 600;
+}
+.input-field-wrap select {
+  flex: 1;
+  min-width: 0;
+  max-width: 100%;
 }
 
 /* Recent Trades Table */
@@ -787,7 +796,7 @@ button, input, select, textarea {
   margin-top: auto;
   border-top: 1px solid var(--border-color);
   background: var(--bg-secondary);
-  padding: 30px 24px;
+  padding: 30px 16px;
   text-align: center;
   color: var(--text-muted);
   font-size: 0.85rem;
@@ -923,6 +932,98 @@ button, input, select, textarea {
   .coin-leaderboard-mcap {
     display: none;
   }
+}
+
+/* ===== Wallet page ===== */
+.wallet-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 24px;
+  align-items: start;
+  margin-bottom: 24px;
+}
+.wallet-grid > div {
+  min-width: 0;
+}
+
+/* ===== How it works ===== */
+.how-it-works-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+.how-it-works-grid > div {
+  min-width: 0;
+}
+@media (max-width: 560px) {
+  .how-it-works-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== User dashboard ===== */
+.dashboard-two-col {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 22px;
+  align-items: start;
+}
+.dashboard-two-col > * {
+  min-width: 0;
+}
+@media (max-width: 992px) {
+  .dashboard-two-col {
+    grid-template-columns: 1fr;
+  }
+  .wallet-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.quick-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: all 0.18s ease;
+  position: relative;
+  overflow: hidden;
+}
+.quick-action i {
+  font-size: 1.4rem;
+  color: var(--accent-green);
+  transition: transform 0.18s ease;
+}
+.quick-action:hover {
+  color: var(--text-primary);
+  border-color: rgba(0, 240, 118, 0.35);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+}
+.dashboard-kpi-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+@media (max-width: 1200px) {
+  .dashboard-kpi-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 768px) {
+  .dashboard-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+}
+
+.quick-action:hover i {
+  transform: scale(1.15);
 }
 
 /* ===== Responsive = */
@@ -1190,3 +1291,128 @@ button, input, select, textarea {
   pointer-events: none;
 }
 
+
+/* ===== Coin page: order flow & live stats ===== */
+.pressure-track {
+  height: 10px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 59, 105, 0.18);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+.pressure-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, #00f076, #10b981);
+  box-shadow: 0 0 14px var(--accent-green-glow);
+  transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.flow-stat {
+  flex: 1;
+  text-align: center;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 8px 6px;
+}
+.flow-row-new {
+  animation: flowIn 0.5s ease;
+  background: rgba(0, 240, 118, 0.04);
+}
+.price-flash-up {
+  animation: priceFlashUp 1.2s ease;
+}
+.price-flash-down {
+  animation: priceFlashDown 1.2s ease;
+}
+@keyframes flowIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes priceFlashUp {
+  0% {
+    color: var(--accent-green);
+    text-shadow: 0 0 20px var(--accent-green-glow);
+  }
+  100% {
+    color: var(--text-primary);
+    text-shadow: none;
+  }
+}
+@keyframes priceFlashDown {
+  0% {
+    color: var(--accent-red);
+    text-shadow: 0 0 20px var(--accent-red-glow);
+  }
+  100% {
+    color: var(--text-primary);
+    text-shadow: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .coin-page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .coin-page-header > div:last-child {
+    text-align: left;
+    width: 100%;
+  }
+  .coin-page-title {
+    flex-wrap: wrap;
+  }
+  .coin-page-avatar {
+    width: 52px;
+    height: 52px;
+  }
+  #priceChartCanvas {
+    height: 260px !important;
+  }
+  .coin-stats-bar {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 14px 16px;
+    gap: 12px;
+  }
+  .coin-stats-bar > div {
+    padding: 8px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+  }
+.flow-stat span.stat-label {
+    font-size: 0.68rem;
+  }
+}
+
+/* Ultra-small screens: compact header so nothing overflows */
+@media (max-width: 380px) {
+  .header {
+    padding: 10px 14px;
+  }
+  .header-container {
+    gap: 8px;
+  }
+  .brand {
+    font-size: 0.9rem;
+    gap: 6px;
+  }
+  .brand-icon {
+    width: 28px;
+    height: 28px;
+    font-size: 0.9rem;
+  }
+  .user-nav-actions {
+    gap: 8px;
+  }
+  .user-nav-actions .btn-sm {
+    padding: 5px 8px;
+    font-size: 0.75rem;
+  }
+}

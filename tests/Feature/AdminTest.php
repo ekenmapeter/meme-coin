@@ -203,6 +203,19 @@ class AdminTest extends TestCase
         $this->assertDatabaseHas('users', ['id' => $admin->id]);
     }
 
+    public function test_admin_can_view_audit_logs(): void
+    {
+        $admin = $this->createAdmin();
+        $coin = $this->createCoin();
+
+        $this->actingAs($admin)->post(route('admin.coins.deactivate', $coin->id));
+
+        $this->actingAs($admin)->get(route('admin.audit-logs.index'))
+            ->assertOk()
+            ->assertSee('coin.deactivated')
+            ->assertSee($admin->name);
+    }
+
     public function test_admin_can_update_user_name_email_and_role(): void
     {
         $admin = $this->createAdmin();

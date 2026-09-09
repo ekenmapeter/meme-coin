@@ -68,6 +68,12 @@
                         <span>Settings & Fees</span>
                     </a>
                 </li>
+                <li class="admin-menu-item {{ request()->is('admin/audit-logs*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.audit-logs.index') }}">
+                        <span><i class="fa-solid fa-clipboard-list"></i></span>
+                        <span>Audit Log</span>
+                    </a>
+                </li>
             </ul>
 
             <div style="margin-top: auto; border-top: 1px solid var(--border-color); padding-top: 16px;">

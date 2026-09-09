@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminAuditLogController;
 use App\Http\Controllers\Admin\AdminCoinController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminDepositController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\Admin\AdminWithdrawalController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CoinController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\WalletController;
 use Illuminate\Support\Facades\Route;
 
@@ -50,6 +52,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'active'])->group(function () {
+    Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('dashboard');
     Route::get('/wallet', [WalletController::class, 'index'])->name('wallet.index');
     Route::get('/swap', function () {
         return redirect()->route('wallet.index', ['tab' => 'swap']);
@@ -104,6 +107,9 @@ Route::middleware(['auth', 'active', 'admin'])->prefix('admin')->name('admin.')-
     // Settings & Fees
     Route::get('/settings', [AdminSettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [AdminSettingController::class, 'update'])->name('settings.update');
+
+    // Audit Logs
+    Route::get('/audit-logs', [AdminAuditLogController::class, 'index'])->name('audit-logs.index');
 
     // Users
     Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');

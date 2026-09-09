@@ -188,4 +188,72 @@
     </div>
 </div>
 
+<div class="widget-card" style="margin-top: 24px;">
+        <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 16px;">
+            <i class="fa-solid fa-clock-rotate-left"></i> User Activity
+        </h3>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; align-items: start;">
+            <!-- Deposits -->
+            <div>
+                <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--accent-green); margin-bottom: 10px;">
+                    <i class="fa-solid fa-arrow-down-to-line"></i> Deposits
+                </h4>
+                <table class="trades-table">
+                    <thead><tr><th>Amount</th><th>Status</th></tr></thead>
+                    <tbody>
+                        @forelse($user->deposits as $d)
+                            <tr>
+                                <td style="font-family: var(--font-mono);">{{ number_format($d->amount, 4) }} {{ $d->currency }}</td>
+                                <td><span class="badge {{ $d->status === 'confirmed' ? 'badge-success' : ($d->status === 'pending' ? 'badge-warning' : 'badge-danger') }}">{{ ucfirst($d->status) }}</span></td>
+                            </tr>
+                        @empty
+                            <tr><td colspan="2" style="color: var(--text-muted); font-size: 0.8rem; text-align: center; padding: 12px;">None</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Withdrawals -->
+            <div>
+                <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--accent-red); margin-bottom: 10px;">
+                    <i class="fa-solid fa-arrow-up-from-line"></i> Withdrawals
+                </h4>
+                <table class="trades-table">
+                    <thead><tr><th>Amount</th><th>Status</th></tr></thead>
+                    <tbody>
+                        @forelse($user->withdrawals as $w)
+                            <tr>
+                                <td style="font-family: var(--font-mono);">{{ number_format($w->amount, 4) }} {{ $w->currency }}</td>
+                                <td><span class="badge {{ $w->status === 'completed' || $w->status === 'approved' ? 'badge-success' : ($w->status === 'pending' ? 'badge-warning' : 'badge-danger') }}">{{ ucfirst($w->status) }}</span></td>
+                            </tr>
+                        @empty
+                            <tr><td colspan="2" style="color: var(--text-muted); font-size: 0.8rem; text-align: center; padding: 12px;">None</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Swaps -->
+            <div>
+                <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--accent-blue); margin-bottom: 10px;">
+                    <i class="fa-solid fa-arrow-right-arrow-left"></i> Swaps
+                </h4>
+                <table class="trades-table">
+                    <thead><tr><th>Tokens</th><th>Received</th></tr></thead>
+                    <tbody>
+                        @forelse($user->swaps as $s)
+                            <tr>
+                                <td style="font-family: var(--font-mono); font-size: 0.85rem;">{{ number_format($s->token_amount) }} {{ $s->coin->ticker ?? '' }}</td>
+                                <td style="font-family: var(--font-mono); font-size: 0.85rem;">{{ sprintf('%.6f', $s->net_btc_received) }} BTC</td>
+                            </tr>
+                        @empty
+                            <tr><td colspan="2" style="color: var(--text-muted); font-size: 0.8rem; text-align: center; padding: 12px;">None</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
 @endsection

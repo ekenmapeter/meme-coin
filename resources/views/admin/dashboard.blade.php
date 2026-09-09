@@ -7,49 +7,49 @@
 
 <!-- 4 KPI Cards matching admin dashboard.png -->
 <div class="kpi-grid">
-    <div class="kpi-card">
+    <a href="{{ route('admin.users.index') }}" class="kpi-card" style="text-decoration: none;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <span class="kpi-title">Total Users</span>
             <span style="font-size: 1.2rem;"><i class="fa-solid fa-users"></i></span>
         </div>
         <div class="kpi-value">{{ number_format($totalUsers) }}</div>
         <div style="font-size: 0.8rem; color: var(--text-muted);">
-            registered accounts
+            <i class="fa-solid fa-arrow-right"></i> manage accounts
         </div>
-    </div>
+    </a>
 
-    <div class="kpi-card">
+    <a href="{{ route('admin.coins.index') }}" class="kpi-card" style="text-decoration: none;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <span class="kpi-title">Total Coins</span>
             <span style="font-size: 1.2rem;"><i class="fa-solid fa-coins"></i></span>
         </div>
         <div class="kpi-value">{{ $totalCoins }}</div>
         <div style="font-size: 0.8rem; color: var(--text-muted);">
-            listed coins
+            <i class="fa-solid fa-arrow-right"></i> manage markets
         </div>
-    </div>
+    </a>
 
-    <div class="kpi-card">
+    <a href="{{ route('admin.deposits.index', ['status' => 'pending']) }}" class="kpi-card" style="text-decoration: none;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span class="kpi-title">Total Volume</span>
-            <span style="font-size: 1.2rem;"><i class="fa-solid fa-chart-simple"></i></span>
+            <span class="kpi-title">Pending Deposits</span>
+            <span style="font-size: 1.2rem;"><i class="fa-solid fa-arrow-down-to-line"></i></span>
         </div>
-        <div class="kpi-value">${{ number_format($totalVolume / 1000000, 2) }}M</div>
+        <div class="kpi-value" style="{{ $pendingDeposits > 0 ? 'color: #f59e0b;' : '' }}">{{ $pendingDeposits }}</div>
         <div style="font-size: 0.8rem; color: var(--text-muted);">
-            24h volume (all coins)
+            <i class="fa-solid fa-arrow-right"></i> review queue
         </div>
-    </div>
+    </a>
 
-    <div class="kpi-card">
+    <a href="{{ route('admin.withdrawals.index', ['status' => 'pending']) }}" class="kpi-card" style="text-decoration: none;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span class="kpi-title">Total Fees</span>
-            <span style="font-size: 1.2rem;"><i class="fa-solid fa-sack-dollar"></i></span>
+            <span class="kpi-title">Pending Withdrawals</span>
+            <span style="font-size: 1.2rem;"><i class="fa-solid fa-arrow-up-from-line"></i></span>
         </div>
-        <div class="kpi-value">${{ number_format($totalFees, 0) }}</div>
+        <div class="kpi-value" style="{{ $pendingWithdrawals > 0 ? 'color: #f59e0b;' : '' }}">{{ $pendingWithdrawals }}</div>
         <div style="font-size: 0.8rem; color: var(--text-muted);">
-            fees from swaps & withdrawals
+            <i class="fa-solid fa-arrow-right"></i> review queue
         </div>
-    </div>
+    </a>
 </div>
 
 <!-- Middle Row: Recent Coins & Top Traders matching admin dashboard.png -->
@@ -200,6 +200,81 @@
         </div>
     </div>
 
+</div>
+
+<!-- Recent Withdrawals Queue -->
+<div class="widget-card" style="margin-top: 24px;">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+        <h3 style="font-size: 1.15rem; font-weight: 700;">
+            <i class="fa-solid fa-arrow-up-from-line" style="color: var(--accent-red);"></i> Recent Withdrawals
+        </h3>
+        <a href="{{ route('admin.withdrawals.index') }}" class="btn btn-secondary btn-sm" style="font-size: 0.78rem;">
+            View All ({{ $pendingWithdrawals }} pending)
+        </a>
+    </div>
+
+    <div style="overflow-x: auto;">
+        <table class="trades-table">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Amount</th>
+                    <th>Net</th>
+                    <th>Destination</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th style="text-align: right;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($recentWithdrawals as $w)
+                    <tr>
+                        <td>
+                            <a href="{{ route('admin.users.edit', $w->user_id) }}" style="font-weight: 700; font-size: 0.9rem;">
+                                {{ $w->user->name ?? 'Unknown' }}
+                            </a>
+                            <div style="font-size: 0.72rem; color: var(--text-muted);">{{ $w->user->email ?? '' }}</div>
+                        </td>
+                        <td style="font-family: var(--font-mono); font-weight: 600;">{{ sprintf('%.6f', $w->amount) }} BTC</td>
+                        <td style="font-family: var(--font-mono); color: var(--text-muted); font-size: 0.85rem;">{{ sprintf('%.6f', $w->net_amount) }}</td>
+                        <td style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);" title="{{ $w->destination_address }}">
+                            {{ $w->short_address }}
+                        </td>
+                        <td style="color: var(--text-muted); font-size: 0.8rem;">{{ $w->created_at->format('M d, H:i') }}</td>
+                        <td>
+                            <span class="badge {{ $w->status === 'pending' ? 'badge-warning' : ($w->status === 'approved' ? 'badge-info' : ($w->status === 'completed' ? 'badge-success' : 'badge-danger')) }}">
+                                {{ ucfirst($w->status) }}
+                            </span>
+                        </td>
+                        <td style="text-align: right;">
+                            <div style="display: inline-flex; gap: 6px;">
+                                @if($w->status === 'pending')
+                                    <form action="{{ route('admin.withdrawals.status', $w->id) }}" method="POST" style="display: inline;">
+                                        @csrf
+                                        <input type="hidden" name="status" value="approved">
+                                        <button type="submit" class="btn btn-primary btn-sm" style="padding: 2px 8px; font-size: 0.7rem;">Approve</button>
+                                    </form>
+                                    <form action="{{ route('admin.withdrawals.status', $w->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Reject and refund BTC balance?');">
+                                        @csrf
+                                        <input type="hidden" name="status" value="rejected">
+                                        <button type="submit" class="btn btn-danger btn-sm" style="padding: 2px 8px; font-size: 0.7rem;">Reject</button>
+                                    </form>
+                                @else
+                                    <a href="{{ route('admin.withdrawals.index') }}" class="btn btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.7rem;">Manage</a>
+                                @endif
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 24px;">
+                            No withdrawal requests found.
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 </div>
 
 @push('scripts')

@@ -51,7 +51,9 @@
                         <td style="font-family: var(--font-mono);">#{{ $dep->id }}</td>
                         <td>
                             <div>
-                                <div style="font-weight: 700;">{{ $dep->user->name ?? 'Trader' }}</div>
+                                <a href="{{ route('admin.users.edit', $dep->user_id) }}" style="font-weight: 700;">
+                                    {{ $dep->user->name ?? 'Trader' }}
+                                </a>
                                 <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);">
                                     {{ $dep->user->wallet_address ?? 'No wallet' }}
                                 </div>

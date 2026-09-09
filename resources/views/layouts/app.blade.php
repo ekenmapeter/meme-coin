@@ -42,12 +42,15 @@
 
             <div class="header-center">
             <ul class="nav-links">
+                @if($user)
+                    <li><a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a></li>
+                @endif
                 <li><a href="{{ route('home') }}" class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}">Home</a></li>
                 <li><a href="{{ route('coins.launch') }}" class="nav-link {{ request()->routeIs('coins.launch') ? 'active' : '' }}">Launch</a></li>
                 <li><a href="{{ route('wallet.index', ['tab' => 'swap']) }}" class="nav-link {{ request()->is('swap*') || (request()->routeIs('wallet.index') && request('tab') == 'swap') ? 'active' : '' }}">Swap</a></li>
                 <li><a href="{{ route('wallet.index') }}" class="nav-link {{ request()->routeIs('wallet.index') && request('tab') != 'swap' ? 'active' : '' }}">Wallet</a></li>
                 @if($user && $user->isAdmin())
-                    <li><a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->is('admin*') ? 'active' : '' }}">Dashboard</a></li>
+                    <li><a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->is('admin*') ? 'active' : '' }}">Admin</a></li>
                 @endif
             </ul>
 
@@ -92,7 +95,7 @@
     </header>
 
     <!-- Global Flash Alerts -->
-    <div style="max-width: 1440px; margin: 16px auto 0; padding: 0 24px; width: 100%;">
+    <div style="max-width: 1440px; margin: 16px auto 0; padding: 0 16px; width: 100%;">
         @if(session('success'))
             <div class="alert alert-success">
                 <span><i class="fa-solid fa-circle-check"></i> {{ session('success') }}</span>
@@ -129,23 +132,6 @@
                 and swap to BTC — all in one place.
             </p>
 
-            <ul class="footer-links-row">
-                <li><a href="{{ route('home') }}"><i class="fa-solid fa-house text-accent"></i> Home</a></li>
-                <li><a href="{{ route('coins.launch') }}"><i class="fa-solid fa-bolt text-accent"></i> Launch a Coin</a></li>
-                <li><a href="{{ route('wallet.index', ['tab' => 'swap']) }}"><i class="fa-solid fa-arrow-right-arrow-left text-accent"></i> Swap to BTC</a></li>
-                <li><a href="{{ route('wallet.index') }}"><i class="fa-solid fa-wallet text-accent"></i> Wallet</a></li>
-                <li><a href="{{ route('wallet.index', ['tab' => 'deposit']) }}"><i class="fa-solid fa-right-to-bracket text-accent"></i> Deposit</a></li>
-                <li><a href="{{ route('wallet.index', ['tab' => 'withdraw']) }}"><i class="fa-solid fa-right-from-bracket text-accent"></i> Withdraw</a></li>
-                <li><a href="{{ route('home') }}#how-it-works"><i class="fa-solid fa-circle-info text-accent"></i> How It Works</a></li>
-                <li><a href="{{ route('home') }}#all-coins"><i class="fa-solid fa-chart-simple text-accent"></i> Explore Coins</a></li>
-                @if($user && $user->isAdmin())
-                    <li><a href="{{ route('admin.dashboard') }}"><i class="fa-solid fa-shield-halved text-accent"></i> Admin</a></li>
-                @endif
-                @if(!$user)
-                    <li><a href="{{ route('login') }}"><i class="fa-solid fa-right-to-bracket text-accent"></i> Sign In</a></li>
-                @endif
-            </ul>
-
             <div class="flex gap-3">
                 <a href="#" class="footer-social" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
                 <a href="#" class="footer-social" aria-label="Telegram"><i class="fa-brands fa-telegram"></i></a>
@@ -172,8 +158,8 @@
     @if($user)
     <!-- ===== Mobile Bottom Navigation (signed-in users) ===== -->
     <nav class="bottom-nav" aria-label="Mobile navigation">
-        <a href="{{ route('home') }}" class="bottom-nav-item {{ request()->routeIs('home') ? 'active' : '' }}">
-            <i class="fa-solid fa-house"></i><span>Home</span>
+        <a href="{{ route('dashboard') }}" class="bottom-nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+            <i class="fa-solid fa-gauge-high"></i><span>Dashboard</span>
         </a>
         <a href="{{ route('coins.launch') }}" class="bottom-nav-item {{ request()->routeIs('coins.launch') ? 'active' : '' }}">
             <i class="fa-solid fa-bolt"></i><span>Launch</span>
@@ -231,6 +217,7 @@
         </div>
 
         <div class="flex-1 overflow-y-auto p-4 space-y-1">
+            <a href="{{ route('dashboard') }}" class="drawer-link"><i class="fa-solid fa-gauge-high w-6 text-accent"></i> Dashboard</a>
             <a href="{{ route('home') }}" class="drawer-link"><i class="fa-solid fa-house w-6 text-accent"></i> Home</a>
             <a href="{{ route('coins.launch') }}" class="drawer-link"><i class="fa-solid fa-bolt w-6 text-accent"></i> Launch a Coin</a>
             <a href="{{ route('wallet.index', ['tab' => 'swap']) }}" class="drawer-link"><i class="fa-solid fa-arrow-right-arrow-left w-6 text-accent"></i> Swap to BTC</a>

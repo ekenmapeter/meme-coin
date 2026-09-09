@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\UserHolding;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -76,6 +77,27 @@ class HomePageTest extends TestCase
         $this->getJson(route('search', ['q' => 'PEPE']))
             ->assertOk()
             ->assertJsonCount(1);
+    }
+
+    public function test_dashboard_requires_auth_and_renders_user_data(): void
+    {
+        $this->get(route('dashboard'))->assertRedirect(route('login'));
+
+        $user = $this->createUser(['name' => 'DashUser']);
+        $coin = $this->createCoin();
+
+        UserHolding::create([
+            'user_id' => $user->id,
+            'coin_id' => $coin->id,
+            'token_balance' => 500000,
+            'avg_buy_price' => 0.0002,
+        ]);
+
+        $this->actingAs($user)->get(route('dashboard'))
+            ->assertOk()
+            ->assertSee('DashUser')
+            ->assertSee('Your Holdings')
+            ->assertSee('PEPEKING');
     }
 
     public function test_live_market_endpoint_returns_coin_data_and_totals(): void

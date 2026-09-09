@@ -37,36 +37,50 @@
         </div>
     </div>
 
-    <!-- Stats Bar matching coin-page.png -->
+    <!-- Stats Matrix -->
     <div class="coin-stats-bar">
         <div>
             <div class="stat-label">Market Cap</div>
-            <div id="liveMarketCap" style="font-size: 1.25rem; font-weight: 700; font-family: var(--font-mono); margin-top: 4px;">
+            <div id="liveMarketCap" style="font-size: 1.15rem; font-weight: 700; font-family: var(--font-mono); margin-top: 4px;">
                 ${{ number_format($coin->market_cap, 0) }}
             </div>
         </div>
         <div>
-            <div class="stat-label">Holders</div>
-            <div id="liveHolders" style="font-size: 1.25rem; font-weight: 700; font-family: var(--font-mono); margin-top: 4px;">
-                {{ number_format($coin->holders_count) }}
-            </div>
+            <div class="stat-label">24h High</div>
+            <div id="liveHigh" style="font-size: 1.15rem; font-weight: 700; font-family: var(--font-mono); margin-top: 4px; color: var(--accent-green);">—</div>
         </div>
         <div>
-            <div class="stat-label">Buyers</div>
-            <div id="liveBuyers" style="font-size: 1.25rem; font-weight: 700; font-family: var(--font-mono); margin-top: 4px;">
-                {{ number_format($coin->buyers_count) }}
-            </div>
+            <div class="stat-label">24h Low</div>
+            <div id="liveLow" style="font-size: 1.15rem; font-weight: 700; font-family: var(--font-mono); margin-top: 4px; color: var(--accent-red);">—</div>
         </div>
         <div>
             <div class="stat-label">Volume (24h)</div>
-            <div id="liveVolume" style="font-size: 1.25rem; font-weight: 700; font-family: var(--font-mono); margin-top: 4px;">
+            <div id="liveVolume" style="font-size: 1.15rem; font-weight: 700; font-family: var(--font-mono); margin-top: 4px;">
                 ${{ number_format($coin->volume_24h, 0) }}
             </div>
         </div>
         <div>
             <div class="stat-label">Liquidity</div>
-            <div style="font-size: 1.25rem; font-weight: 700; font-family: var(--font-mono); margin-top: 4px; color: var(--accent-green);">
+            <div id="liveLiquidity" style="font-size: 1.15rem; font-weight: 700; font-family: var(--font-mono); margin-top: 4px; color: var(--accent-green);">
                 ${{ number_format($coin->liquidity, 0) }}
+            </div>
+        </div>
+        <div>
+            <div class="stat-label">Holders</div>
+            <div id="liveHolders" style="font-size: 1.15rem; font-weight: 700; font-family: var(--font-mono); margin-top: 4px;">
+                {{ number_format($coin->holders_count) }}
+            </div>
+        </div>
+        <div>
+            <div class="stat-label">Buyers</div>
+            <div id="liveBuyers" style="font-size: 1.15rem; font-weight: 700; font-family: var(--font-mono); margin-top: 4px;">
+                {{ number_format($coin->buyers_count) }}
+            </div>
+        </div>
+        <div>
+            <div class="stat-label">Total Supply</div>
+            <div id="liveSupply" style="font-size: 1.15rem; font-weight: 700; font-family: var(--font-mono); margin-top: 4px;">
+                {{ $coin->formatted_total_supply }}
             </div>
         </div>
     </div>
@@ -85,7 +99,7 @@
                     </div>
 
                     <!-- Timeframe Selectors matching coin-page.png -->
-                    <div style="display: flex; gap: 6px; background: var(--bg-secondary); padding: 4px; border-radius: var(--radius-sm);">
+                    <div style="display: flex; flex-wrap: wrap; gap: 6px; background: var(--bg-secondary); padding: 4px; border-radius: var(--radius-sm);">
                         @foreach(['1m', '5m', '15m', '1h', '4h', '1D'] as $tf)
                             <button type="button" class="btn btn-secondary btn-sm tf-btn {{ $tf === '1D' ? 'active' : '' }}" onclick="changeTimeframe('{{ $tf }}', this)" style="padding: 4px 10px; font-size: 0.8rem; border:none; {{ $tf === '1D' ? 'background: var(--bg-card); color: var(--accent-green); font-weight:700;' : '' }}">
                                 {{ $tf }}
@@ -95,7 +109,7 @@
                 </div>
 
                 <!-- Ticker Header on Chart -->
-                <div style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 10px; display: flex; align-items: center; gap: 12px;">
+                <div style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 10px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
                     <strong style="color: var(--text-primary);">{{ $coin->ticker }}/USD</strong>
                     <span id="chartCandleInfo">O: {{ sprintf('%.6f', $coin->current_price * 0.98) }} H: {{ sprintf('%.6f', $coin->current_price * 1.04) }} L: {{ sprintf('%.6f', $coin->current_price * 0.96) }} C: {{ sprintf('%.6f', $coin->current_price) }}</span>
                 </div>
@@ -103,6 +117,46 @@
                 <!-- Interactive Chart Canvas -->
                 <div style="position: relative; height: 380px; width: 100%;">
                     <canvas id="priceChartCanvas"></canvas>
+                </div>
+            </div>
+
+            <!-- Live Order Flow / Pressure -->
+            <div class="widget-card" style="margin-bottom: 20px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
+                    <h3 style="font-size: 1.05rem; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-bolt" style="color: var(--accent-green);"></i> Live Order Flow
+                    </h3>
+                    <span style="font-size: 0.72rem; color: var(--accent-green); background: rgba(0,240,118,0.1); padding: 2px 8px; border-radius: var(--radius-full); font-weight: 700;">LIVE</span>
+                </div>
+
+                <div class="pressure-track">
+                    <div class="pressure-fill" id="buyPressureBar" style="width: 50%;"></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 8px; font-family: var(--font-mono); font-size: 0.82rem;">
+                    <span style="color: var(--accent-green); font-weight: 700;">
+                        BUY <span id="buyPressurePct">50.0</span>%
+                    </span>
+                    <span style="color: var(--accent-red); font-weight: 700;">
+                        SELL <span id="sellPressurePct">50.0</span>%
+                    </span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 10px; gap: 12px;">
+                    <div class="flow-stat">
+                        <span class="stat-label">Buys (100)</span>
+                        <span id="buyCount" style="font-family: var(--font-mono); font-weight: 700; color: var(--accent-green); font-size: 1.05rem;">—</span>
+                    </div>
+                    <div class="flow-stat">
+                        <span class="stat-label">Sells (100)</span>
+                        <span id="sellCount" style="font-family: var(--font-mono); font-weight: 700; color: var(--accent-red); font-size: 1.05rem;">—</span>
+                    </div>
+                    <div class="flow-stat">
+                        <span class="stat-label">Buy Vol.</span>
+                        <span id="buyVolume" style="font-family: var(--font-mono); font-weight: 700; color: var(--accent-green); font-size: 1.05rem;">—</span>
+                    </div>
+                    <div class="flow-stat">
+                        <span class="stat-label">Sell Vol.</span>
+                        <span id="sellVolume" style="font-family: var(--font-mono); font-weight: 700; color: var(--accent-red); font-size: 1.05rem;">—</span>
+                    </div>
                 </div>
             </div>
 
@@ -522,9 +576,17 @@
             const res = await fetch(`/api/coins/${coinTicker}/trades`);
             const data = await res.json();
 
+            const priceChanged = data.current_price !== coinPrice;
             coinPrice = data.current_price;
-            document.getElementById('liveCoinPrice').innerText = data.formatted_price;
-            
+
+            const priceEl = document.getElementById('liveCoinPrice');
+            priceEl.innerText = data.formatted_price;
+            if (priceChanged) {
+                priceEl.classList.remove('price-flash-up', 'price-flash-down');
+                void priceEl.offsetWidth;
+                priceEl.classList.add(data.change_24h >= 0 ? 'price-flash-up' : 'price-flash-down');
+            }
+
             const changeEl = document.getElementById('liveCoinChange');
             changeEl.innerText = (data.change_24h >= 0 ? '+' : '') + Number(data.change_24h).toFixed(2) + '%';
             changeEl.className = 'badge-change ' + (data.change_24h >= 0 ? 'up' : 'down');
@@ -533,12 +595,36 @@
             document.getElementById('liveVolume').innerText = data.volume_24h;
             document.getElementById('liveHolders').innerText = data.holders;
             document.getElementById('liveBuyers').innerText = data.buyers;
+            if (document.getElementById('liveLiquidity')) {
+                document.getElementById('liveLiquidity').innerText = data.liquidity ?? '—';
+            }
+            if (document.getElementById('liveHigh')) {
+                document.getElementById('liveHigh').innerText = data.high_24h ?? '—';
+            }
+            if (document.getElementById('liveLow')) {
+                document.getElementById('liveLow').innerText = data.low_24h ?? '—';
+            }
+            if (document.getElementById('liveSupply')) {
+                document.getElementById('liveSupply').innerText = data.total_supply ?? '—';
+            }
 
-            // Update trades table
+            // Order flow pressure
+            if (document.getElementById('buyPressureBar')) {
+                document.getElementById('buyPressureBar').style.width = data.buy_pressure + '%';
+                document.getElementById('buyPressurePct').innerText = data.buy_pressure;
+                document.getElementById('sellPressurePct').innerText = (100 - data.buy_pressure).toFixed(1);
+                document.getElementById('buyCount').innerText = data.buy_count;
+                document.getElementById('sellCount').innerText = data.sell_count;
+                document.getElementById('buyVolume').innerText = '$' + data.buy_volume;
+                document.getElementById('sellVolume').innerText = '$' + data.sell_volume;
+            }
+
+            // Update trades table with flow animation
             if (data.trades && data.trades.length > 0) {
                 const tbody = document.getElementById('recentTradesTbody');
+                const existing = new Set(Array.from(tbody.querySelectorAll('tr')).map(r => r.dataset.tradeId));
                 tbody.innerHTML = data.trades.map(t => `
-                    <tr>
+                    <tr data-trade-id="${t.id}" class="${existing.has(String(t.id)) ? '' : 'flow-row-new'}">
                         <td>
                             <div style="display:flex; align-items:center; gap:8px; font-family:var(--font-mono);">
                                 <span><i class="fa-solid fa-gamepad"></i></span>

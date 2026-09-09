@@ -182,7 +182,7 @@
         </h2>
     </div>
 
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+    <div class="how-it-works-grid">
         <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 24px;">
             <div style="font-size: 2.2rem; margin-bottom: 12px;"><i class="fa-solid fa-rocket"></i></div>
             <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 8px;">1. Launch Instant Coins</h3>
