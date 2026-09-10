@@ -99,19 +99,21 @@
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
             <div class="input-group">
-                <label class="input-label">Simulated Bitcoin Rate ($/BTC)</label>
+                <label class="input-label">Fallback Bitcoin Rate ($/BTC)</label>
                 <div class="input-field-wrap">
                     <span>$</span>
                     <input type="number" step="10" name="btc_usd_price" value="{{ $settings['btc_usd_price'] }}" required>
                 </div>
+                <p style="margin-top: 4px; font-size: 0.75rem; color: var(--text-muted);">Used only when the live price feed is unavailable. Live BTC/USD price is fetched automatically.</p>
             </div>
 
             <div class="input-group">
-                <label class="input-label">Simulated Solana Rate ($/SOL)</label>
+                <label class="input-label">Fallback Solana Rate ($/SOL)</label>
                 <div class="input-field-wrap">
                     <span>$</span>
                     <input type="number" step="0.5" name="sol_usd_price" value="{{ $settings['sol_usd_price'] }}" required>
                 </div>
+                <p style="margin-top: 4px; font-size: 0.75rem; color: var(--text-muted);">Used only when the live price feed is unavailable.</p>
             </div>
         </div>
 

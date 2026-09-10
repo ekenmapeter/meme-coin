@@ -42,6 +42,7 @@ class AdminCoinController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:60|regex:/^[A-Za-z0-9 .\-_]+$/',
             'ticker' => 'required|string|max:12|alpha_dash|unique:coins,ticker',
+            'coingecko_id' => 'nullable|string|max:60|regex:/^[a-z0-9\-]+$/',
             'description' => 'nullable|string|max:2000',
             'current_price' => 'required|numeric|gt:0',
             'total_supply' => 'required|numeric|gt:0',
@@ -62,6 +63,7 @@ class AdminCoinController extends Controller
             $coin = Coin::create([
                 'name' => strtoupper($request->name),
                 'ticker' => strtoupper($request->ticker),
+                'coingecko_id' => strtolower(trim((string) $request->coingecko_id)) ?: null,
                 'description' => $request->description,
                 'logo_path' => $this->storeLogo($request),
                 'contract_address' => '8x'.Str::random(32),
@@ -103,6 +105,7 @@ class AdminCoinController extends Controller
         $request->validate([
             'name' => 'required|string|max:60|regex:/^[A-Za-z0-9 .\-_]+$/',
             'ticker' => 'required|string|max:12|alpha_dash|unique:coins,ticker,'.$coin->id,
+            'coingecko_id' => 'nullable|string|max:60|regex:/^[a-z0-9\-]+$/',
             'description' => 'nullable|string|max:2000',
             'current_price' => 'required|numeric|gt:0',
             'total_supply' => 'required|numeric|gt:0',
@@ -128,6 +131,7 @@ class AdminCoinController extends Controller
 
             $coin->name = strtoupper($request->name);
             $coin->ticker = strtoupper($request->ticker);
+            $coin->coingecko_id = strtolower(trim((string) $request->coingecko_id)) ?: null;
             $coin->description = $request->description;
             $coin->current_price = $newPrice;
             $coin->market_cap = $newPrice * $totalSupply;

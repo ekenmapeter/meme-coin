@@ -6,19 +6,26 @@ use App\Http\Controllers\Controller;
 use App\Models\Coin;
 use App\Models\CoinTrade;
 use App\Models\Deposit;
-use App\Models\PlatformSetting;
 use App\Models\Swap;
 use App\Models\User;
 use App\Models\Withdrawal;
+use App\Services\CryptoPriceService;
 
 class AdminDashboardController extends Controller
 {
+    protected CryptoPriceService $prices;
+
+    public function __construct(CryptoPriceService $prices)
+    {
+        $this->prices = $prices;
+    }
+
     public function index()
     {
         $totalUsers = User::count();
         $totalCoins = Coin::count();
         $totalVolume = Coin::sum('volume_24h');
-        $btcUsd = (float) PlatformSetting::get('btc_usd_price', 66450.00);
+        $btcUsd = $this->prices->btcUsd();
 
         // Fees collected (from swaps + completed withdrawals), valued in USD.
         $swapFeesUsd = Swap::sum('fee_btc') * $btcUsd;

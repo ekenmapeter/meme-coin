@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Coin;
 use App\Models\PlatformSetting;
+use App\Services\CryptoPriceService;
 use App\Services\MarketSimulatorService;
 use Illuminate\Http\Request;
 
@@ -11,9 +12,12 @@ class HomeController extends Controller
 {
     protected MarketSimulatorService $simulator;
 
-    public function __construct(MarketSimulatorService $simulator)
+    protected CryptoPriceService $prices;
+
+    public function __construct(MarketSimulatorService $simulator, CryptoPriceService $prices)
     {
         $this->simulator = $simulator;
+        $this->prices = $prices;
     }
 
     public function index()
@@ -96,6 +100,7 @@ class HomeController extends Controller
     public function liveMarket()
     {
         $this->simulator->tickAllCoins();
+        $this->simulator->syncLiveCoinPrices();
 
         $coins = Coin::where('is_active', true)
             ->orderBy('market_cap', 'desc')
@@ -119,7 +124,7 @@ class HomeController extends Controller
 
         return response()->json([
             'coins' => $coins,
-            'sol_usd_price' => (float) PlatformSetting::get('sol_usd_price', 142.50),
+            'sol_usd_price' => $this->prices->solUsd(),
             'total_market_cap' => (float) $coins->sum('market_cap'),
             'total_volume_24h' => (float) $coins->sum('volume_24h'),
             'total_coins' => $coins->count(),

@@ -64,6 +64,7 @@
     <!-- Quick actions -->
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin: 22px 0;">
         <a href="{{ route('coins.index') }}" class="quick-action"><i class="fa-solid fa-arrow-trend-up"></i><span>Trade Coins</span></a>
+        <a href="{{ route('coins.index') }}" class="quick-action"><i class="fa-solid fa-chart-line"></i><span>Markets</span></a>
         <a href="{{ route('wallet.index', ['tab' => 'swap']) }}" class="quick-action"><i class="fa-solid fa-arrow-right-arrow-left"></i><span>Swap to BTC</span></a>
         <a href="{{ route('wallet.index', ['tab' => 'deposit']) }}" class="quick-action"><i class="fa-solid fa-right-to-bracket"></i><span>Deposit</span></a>
         <a href="{{ route('wallet.index', ['tab' => 'withdraw']) }}" class="quick-action"><i class="fa-solid fa-right-from-bracket"></i><span>Withdraw</span></a>

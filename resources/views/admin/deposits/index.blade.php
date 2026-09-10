@@ -47,7 +47,18 @@
             </thead>
             <tbody>
                 @forelse($deposits as $dep)
-                    <tr>
+                    <tr
+                        data-id="{{ $dep->id }}"
+                        data-user="{{ $dep->user->name ?? 'Trader' }}"
+                        data-wallet="{{ $dep->user->wallet_address ?? 'No wallet' }}"
+                        data-method="{{ $dep->depositMethod->name ?? $dep->currency }}"
+                        data-amount="{{ number_format($dep->amount, 8, '.', '') }}"
+                        data-currency="{{ $dep->currency }}"
+                        data-txid="{{ $dep->txid }}"
+                        data-date="{{ $dep->created_at->format('M d, Y h:i A') }}"
+                        data-status="{{ ucfirst($dep->status) }}"
+                        data-notes="{{ $dep->admin_notes ?? '' }}"
+                    >
                         <td style="font-family: var(--font-mono);">#{{ $dep->id }}</td>
                         <td>
                             <div>
@@ -63,8 +74,11 @@
                             {{ number_format($dep->amount, 4) }}
                         </td>
                         <td style="font-weight: 700;">{{ $dep->currency }}</td>
-                        <td style="font-family: var(--font-mono); font-size: 0.85rem;" title="{{ $dep->txid }}">
-                            {{ $dep->short_txid }}
+                        <td style="font-family: var(--font-mono); font-size: 0.85rem;">
+                            <button type="button" onclick="openDepositModal(this.closest('tr'))" title="Click to view full transaction hash"
+                                    style="background:none; border:none; color:var(--accent-green); cursor:pointer; font-family:inherit; padding:0;">
+                                {{ $dep->short_txid }} <i class="fa-solid fa-up-right-from-square" style="font-size: 0.65rem;"></i>
+                            </button>
                         </td>
                         <td style="color: var(--text-muted); font-size: 0.8rem;">
                             {{ $dep->created_at->format('M d, Y h:i A') }}
@@ -76,6 +90,11 @@
                         </td>
                         <td style="text-align: right;">
                             <div style="display: inline-flex; gap: 6px;">
+                                <button type="button" class="btn btn-secondary btn-sm" style="padding: 4px 8px; font-size: 0.75rem;"
+                                        onclick="openDepositModal(this.closest('tr'))" title="View full deposit details & transaction hash">
+                                    <i class="fa-solid fa-eye"></i> View
+                                </button>
+
                                 @if($dep->status !== 'confirmed')
                                     <form action="{{ route('admin.deposits.status', $dep->id) }}" method="POST" style="display: inline;">
                                         @csrf
@@ -175,4 +194,116 @@
     </div>
 </div>
 
+<!-- Deposit Details Modal -->
+<div id="depositModal" style="display:none; position:fixed; inset:0; z-index:1000; background:rgba(0,0,0,0.65); align-items:center; justify-content:center; padding:20px;" onclick="if (event.target === this) closeDepositModal()">
+    <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius-md); max-width:580px; width:100%; padding:24px; max-height:90vh; overflow-y:auto;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:18px;">
+            <h3 style="font-size:1.2rem; font-weight:800;">Deposit <span id="mDepositId" style="font-family:var(--font-mono);"></span></h3>
+            <button type="button" onclick="closeDepositModal()" style="background:none; border:none; color:var(--text-muted); font-size:1.2rem; cursor:pointer;">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:12px; font-size:0.9rem;">
+            <div style="display:flex; justify-content:space-between; gap:12px;">
+                <span style="color:var(--text-muted);">User</span>
+                <span id="mDepositUser" style="font-weight:700; text-align:right;"></span>
+            </div>
+            <div style="display:flex; justify-content:space-between; gap:12px;">
+                <span style="color:var(--text-muted);">Wallet</span>
+                <span id="mDepositWallet" style="font-family:var(--font-mono); font-size:0.8rem; text-align:right; word-break:break-all;"></span>
+            </div>
+            <div style="display:flex; justify-content:space-between; gap:12px;">
+                <span style="color:var(--text-muted);">Method</span>
+                <span id="mDepositMethod" style="font-weight:700;"></span>
+            </div>
+            <div style="display:flex; justify-content:space-between; gap:12px;">
+                <span style="color:var(--text-muted);">Amount</span>
+                <span id="mDepositAmount" style="font-family:var(--font-mono); font-weight:700; color:var(--accent-green);"></span>
+            </div>
+            <div style="display:flex; justify-content:space-between; gap:12px;">
+                <span style="color:var(--text-muted);">Submitted</span>
+                <span id="mDepositDate" style="color:var(--text-secondary);"></span>
+            </div>
+            <div style="display:flex; justify-content:space-between; gap:12px;">
+                <span style="color:var(--text-muted);">Status</span>
+                <span id="mDepositStatus"></span>
+            </div>
+
+            <div style="background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:14px 16px; margin-top:4px;">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+                    <span style="color:var(--text-muted); font-weight:600;">Transaction Hash (TXID)</span>
+                    <div style="display:flex; gap:8px;">
+                        <button type="button" onclick="copyDepositTxid()" class="btn btn-secondary btn-sm" style="padding:3px 8px; font-size:0.72rem;">⎘ Copy</button>
+                        <a id="mTxExplorer" href="#" target="_blank" rel="noopener" class="btn btn-secondary btn-sm" style="padding:3px 8px; font-size:0.72rem; text-decoration:none;">
+                            View on Explorer <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.65rem;"></i>
+                        </a>
+                    </div>
+                </div>
+                <div id="mDepositTxid" style="font-family:var(--font-mono); font-size:0.78rem; color:var(--text-secondary); word-break:break-all; line-height:1.5;"></div>
+            </div>
+
+            <div id="mDepositNotesWrap" style="display:none; background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:14px 16px;">
+                <div style="color:var(--text-muted); font-weight:600; margin-bottom:6px;">Admin Notes</div>
+                <div id="mDepositNotes" style="font-size:0.85rem; color:var(--text-secondary); word-break:break-word;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+    function openDepositModal(row) {
+        const d = row.dataset;
+
+        document.getElementById('mDepositId').textContent = '#' + d.id;
+        document.getElementById('mDepositUser').textContent = d.user;
+        document.getElementById('mDepositWallet').textContent = d.wallet;
+        document.getElementById('mDepositMethod').textContent = d.method;
+        document.getElementById('mDepositAmount').textContent = Number(d.amount).toLocaleString(undefined, { maximumFractionDigits: 8 }) + ' ' + d.currency;
+        document.getElementById('mDepositDate').textContent = d.date;
+        document.getElementById('mDepositStatus').innerHTML = '<span class="badge ' + (d.status === 'Confirmed' ? 'badge-success' : (d.status === 'Pending' ? 'badge-warning' : 'badge-danger')) + '">' + d.status + '</span>';
+        document.getElementById('mDepositTxid').textContent = d.txid;
+
+        const explorer = explorerUrl(d.currency, d.txid);
+        const explorerLink = document.getElementById('mTxExplorer');
+        explorerLink.style.display = explorer ? '' : 'none';
+        if (explorer) {
+            explorerLink.href = explorer;
+        }
+
+        const notes = d.notes.trim();
+        const notesWrap = document.getElementById('mDepositNotesWrap');
+        notesWrap.style.display = notes ? '' : 'none';
+        document.getElementById('mDepositNotes').textContent = notes;
+
+        const modal = document.getElementById('depositModal');
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeDepositModal() {
+        document.getElementById('depositModal').style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    function copyDepositTxid() {
+        const txid = document.getElementById('mDepositTxid').textContent.trim();
+        navigator.clipboard.writeText(txid).then(() => alert('Transaction hash copied: ' + txid));
+    }
+
+    function explorerUrl(currency, txid) {
+        if (!txid) return null;
+        const tx = encodeURIComponent(txid);
+        if (currency === 'BTC') return 'https://mempool.space/tx/' + tx;
+        if (currency === 'SOL') return 'https://solscan.io/tx/' + tx;
+        if (currency === 'ETH') return 'https://etherscan.io/tx/' + tx;
+        return null;
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeDepositModal();
+    });
+</script>
+@endpush
 @endsection

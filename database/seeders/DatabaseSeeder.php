@@ -55,6 +55,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'PEPEKING',
                 'ticker' => 'PEPE',
+                'coingecko_id' => 'pepe',
                 'description' => 'The king of all Pepes. Built for the meme revolution with simulated zero tax and high bonding curve momentum.',
                 'logo_path' => 'pepeking.png',
                 'contract_address' => '8x1234abcd5678ef90gh12ij34kl56mn78',
@@ -77,6 +78,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'DOGEMOON',
                 'ticker' => 'DOGE',
+                'coingecko_id' => 'dogecoin',
                 'description' => 'Doge takes the rocket straight to outer orbit. Community driven cosmic dog meme token.',
                 'logo_path' => 'dogemoon.png',
                 'contract_address' => '7d9834abcd1234ef90gh12ij34kl56mn11',
@@ -99,6 +101,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'SHIBABOOM',
                 'ticker' => 'SHIBA',
+                'coingecko_id' => 'shiba-inu',
                 'description' => 'Explosive Shiba energy powering the next generation of meme liquidity.',
                 'logo_path' => 'shibaboom.png',
                 'contract_address' => '3f4434abcd5678ef90gh12ij34kl56mn22',
@@ -121,6 +124,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'BABYFLOKI',
                 'ticker' => 'FLOKI',
+                'coingecko_id' => 'floki',
                 'description' => 'Viking puppy on Solana with endless meme potential and community raids.',
                 'logo_path' => 'babyfloki.png',
                 'contract_address' => '5b8834abcd5678ef90gh12ij34kl56mn33',
@@ -143,6 +147,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'WOJAK',
                 'ticker' => 'WOJAK',
+                'coingecko_id' => 'wojak',
                 'description' => 'Feels good man. The token for all crypto traders riding the rollercoaster of green and red candles.',
                 'logo_path' => 'wojak.png',
                 'contract_address' => '9a1134abcd5678ef90gh12ij34kl56mn44',

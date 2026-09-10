@@ -4,6 +4,19 @@
     $siteLogo = \App\Models\PlatformSetting::get('site_logo');
     $siteIcon = \App\Models\PlatformSetting::get('site_icon', 'images/coins/pepeking.svg');
     $user = Auth::user();
+
+    $headerPortfolioUsd = 0.0;
+    if ($user) {
+        $headerPrices = app(\App\Services\CryptoPriceService::class);
+        $headerBtcPriceUsd = $headerPrices->btcUsd();
+        $headerSolPriceUsd = $headerPrices->solUsd();
+        $headerHoldingsUsd = \App\Models\UserHolding::with('coin')
+            ->where('user_id', $user->id)
+            ->where('token_balance', '>', 0)
+            ->get()
+            ->sum(fn ($h) => $h->token_balance * ($h->coin->current_price ?? 0));
+        $headerPortfolioUsd = $headerHoldingsUsd + $user->usd_balance + ($user->btc_balance * $headerBtcPriceUsd) + ($user->sol_balance * $headerSolPriceUsd);
+    }
 @endphp
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
@@ -46,6 +59,7 @@
                     <li><a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a></li>
                 @endif
                 <li><a href="{{ route('home') }}" class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}">Home</a></li>
+                <li><a href="{{ route('coins.index') }}" class="nav-link {{ request()->routeIs('coins.index', 'coins.show') ? 'active' : '' }}">Markets</a></li>
                 <li><a href="{{ route('coins.launch') }}" class="nav-link {{ request()->routeIs('coins.launch') ? 'active' : '' }}">Launch</a></li>
                 <li><a href="{{ route('wallet.index', ['tab' => 'swap']) }}" class="nav-link {{ request()->is('swap*') || (request()->routeIs('wallet.index') && request('tab') == 'swap') ? 'active' : '' }}">Swap</a></li>
                 <li><a href="{{ route('wallet.index') }}" class="nav-link {{ request()->routeIs('wallet.index') && request('tab') != 'swap' ? 'active' : '' }}">Wallet</a></li>
@@ -64,19 +78,20 @@
 
         <div class="user-nav-actions">
                 @if($user)
-                    <a href="{{ route('wallet.index') }}" class="btn btn-secondary btn-sm" style="font-family: var(--font-mono); font-size: 0.85rem; border-color: rgba(0,240,118,0.3);">
+                    <a href="{{ route('wallet.index') }}" class="btn btn-secondary btn-sm" title="Total portfolio value" style="font-family: var(--font-mono); font-size: 0.85rem; border-color: rgba(0,240,118,0.3);">
                         <span style="color: var(--accent-green); font-size: 0.9rem;"><i class="fa-solid fa-circle"></i></span>
                         <span class="hidden lg:inline">{{ substr($user->wallet_address ?? '0x8f...a1b2', 0, 6) }}...{{ substr($user->wallet_address ?? '0x8f...a1b2', -4) }}</span>
                         <span style="color: #10b981; font-weight: 700; margin-left: 4px;">
-                            @if($user->sol_balance >= 1000000)
-                                {{ number_format($user->sol_balance / 1000000, 1) }}M
-                            @elseif($user->sol_balance >= 1000)
-                                {{ number_format($user->sol_balance / 1000, 1) }}K
+                            @if($headerPortfolioUsd >= 1000000)
+                                ${{ number_format($headerPortfolioUsd / 1000000, 1) }}M
+                            @elseif($headerPortfolioUsd >= 1000)
+                                ${{ number_format($headerPortfolioUsd / 1000, 1) }}K
                             @else
-                                {{ number_format($user->sol_balance, 2) }}
-                            @endif SOL
+                                ${{ number_format($headerPortfolioUsd, 2) }}
+                            @endif
                         </span>
                     </a>
+                    <a href="{{ route('profile.show') }}" class="btn btn-secondary btn-sm" title="Profile" style="padding: 6px 10px;"><i class="fa-solid fa-user"></i></a>
                     <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                         @csrf
                         <button type="submit" class="btn btn-secondary btn-sm" title="Disconnect" style="padding: 6px 10px;"><i class="fa-solid fa-right-from-bracket"></i></button>
@@ -202,9 +217,13 @@
 
         <div class="p-4 border-b border-white/10 bg-white/[0.03]">
             <div class="flex items-center gap-3">
-                <div class="h-10 w-10 rounded-full bg-gradient-to-br from-accent to-emerald-700 grid place-items-center font-bold text-black">
-                    {{ strtoupper(substr($user->name, 0, 1)) }}
-                </div>
+                @if($user->avatar && file_exists(public_path($user->avatar)))
+                    <img src="{{ asset($user->avatar) }}" alt="{{ $user->name }}" class="h-10 w-10 rounded-full object-cover border border-white/10">
+                @else
+                    <div class="h-10 w-10 rounded-full bg-gradient-to-br from-accent to-emerald-700 grid place-items-center font-bold text-black">
+                        {{ strtoupper(substr($user->name, 0, 1)) }}
+                    </div>
+                @endif
                 <div class="min-w-0">
                     <div class="font-bold text-white truncate">{{ $user->name }}</div>
                     <div class="text-xs text-slate-400 font-mono truncate">{{ $user->email }}</div>
@@ -219,11 +238,13 @@
         <div class="flex-1 overflow-y-auto p-4 space-y-1">
             <a href="{{ route('dashboard') }}" class="drawer-link"><i class="fa-solid fa-gauge-high w-6 text-accent"></i> Dashboard</a>
             <a href="{{ route('home') }}" class="drawer-link"><i class="fa-solid fa-house w-6 text-accent"></i> Home</a>
+            <a href="{{ route('coins.index') }}" class="drawer-link"><i class="fa-solid fa-chart-line w-6 text-accent"></i> Markets</a>
             <a href="{{ route('coins.launch') }}" class="drawer-link"><i class="fa-solid fa-bolt w-6 text-accent"></i> Launch a Coin</a>
             <a href="{{ route('wallet.index', ['tab' => 'swap']) }}" class="drawer-link"><i class="fa-solid fa-arrow-right-arrow-left w-6 text-accent"></i> Swap to BTC</a>
             <a href="{{ route('wallet.index') }}" class="drawer-link"><i class="fa-solid fa-wallet w-6 text-accent"></i> Wallet</a>
             <a href="{{ route('wallet.index', ['tab' => 'deposit']) }}" class="drawer-link"><i class="fa-solid fa-right-to-bracket w-6 text-accent"></i> Deposit</a>
             <a href="{{ route('wallet.index', ['tab' => 'withdraw']) }}" class="drawer-link"><i class="fa-solid fa-right-from-bracket w-6 text-accent"></i> Withdraw</a>
+            <a href="{{ route('profile.show') }}" class="drawer-link"><i class="fa-solid fa-user w-6 text-accent"></i> Profile</a>
             @if($user->isAdmin())
                 <div class="pt-2 mt-2 border-t border-white/10 text-xs uppercase tracking-widest text-slate-500 font-bold px-3">Admin</div>
                 <a href="{{ route('admin.dashboard') }}" class="drawer-link"><i class="fa-solid fa-gauge-high w-6 text-amber-400"></i> Dashboard</a>

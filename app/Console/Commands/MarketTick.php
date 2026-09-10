@@ -27,8 +27,9 @@ class MarketTick extends Command
     public function handle(MarketSimulatorService $simulator): int
     {
         $ticked = $simulator->tickAllCoins();
+        $synced = $simulator->syncLiveCoinPrices();
 
-        $this->info("Market tick complete. {$ticked} coin(s) updated.");
+        $this->info("Market tick complete. {$ticked} coin(s) simulated, {$synced} coin(s) synced from live prices.");
 
         return self::SUCCESS;
     }

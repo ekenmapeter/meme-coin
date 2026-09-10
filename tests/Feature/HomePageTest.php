@@ -34,7 +34,8 @@ class HomePageTest extends TestCase
             ->assertSee('bottom-nav', false)
             ->assertSee('drawer-panel', false)
             ->assertSee('x-data', false)
-            ->assertSee('fa-solid', false);
+            ->assertSee('fa-solid', false)
+            ->assertSee('$0.00', false);
     }
 
     public function test_guests_do_not_get_bottom_nav(): void

@@ -14,12 +14,19 @@ use Illuminate\Support\Facades\DB;
 
 class MarketSimulatorService
 {
+    protected CryptoPriceService $prices;
+
+    public function __construct(CryptoPriceService $prices)
+    {
+        $this->prices = $prices;
+    }
+
     /**
      * Ticks a coin's price according to its mode if enough time has passed.
      */
     public function tickCoin(Coin $coin): bool
     {
-        if (! $coin->is_active || $coin->price_movement_mode === 'manual') {
+        if (! $coin->is_active || $coin->price_movement_mode === 'manual' || $coin->coingecko_id) {
             return false;
         }
 
@@ -190,7 +197,7 @@ class MarketSimulatorService
                 throw new \Exception('Trading for this coin is currently paused.');
             }
 
-            $solPrice = (float) PlatformSetting::get('sol_usd_price', 142.50);
+            $solPrice = $this->prices->solUsd();
 
             if ($type === 'buy') {
                 // $amount is how much SOL the user is paying
@@ -345,7 +352,7 @@ class MarketSimulatorService
                 throw new \Exception("Insufficient token balance. You hold {$avail} {$coin->ticker}.");
             }
 
-            $btcusd = (float) PlatformSetting::get('btc_usd_price', 66450.00);
+            $btcusd = $this->prices->btcUsd();
             $feePercent = (float) PlatformSetting::get('swap_fee_percent', 1.00);
 
             $usdValue = $tokenAmount * $coin->current_price;
@@ -397,5 +404,44 @@ class MarketSimulatorService
         }
 
         return $ticked;
+    }
+
+    /**
+     * Overwrites simulated data with live CoinGecko market data for every
+     * active coin that has a coingecko_id configured.
+     */
+    public function syncLiveCoinPrices(): int
+    {
+        $coins = Coin::where('is_active', true)
+            ->whereNotNull('coingecko_id')
+            ->get();
+
+        if ($coins->isEmpty()) {
+            return 0;
+        }
+
+        $live = $this->prices->coinMarketData($coins->pluck('coingecko_id')->all());
+
+        $synced = 0;
+        foreach ($coins as $coin) {
+            $data = $live[$coin->coingecko_id] ?? null;
+            if (! $data) {
+                continue;
+            }
+
+            $coin->current_price = $data['price'];
+            if ($data['market_cap'] > 0) {
+                $coin->market_cap = $data['market_cap'];
+            }
+            if ($data['volume_24h'] > 0) {
+                $coin->volume_24h = $data['volume_24h'];
+            }
+            $coin->change_24h = $data['change_24h'];
+            $coin->save();
+
+            $synced++;
+        }
+
+        return $synced;
     }
 }

@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Coin;
 use App\Models\CoinTrade;
-use App\Models\PlatformSetting;
 use App\Models\PriceHistory;
 use App\Models\UserHolding;
+use App\Services\CryptoPriceService;
 use App\Services\MarketSimulatorService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -18,13 +18,18 @@ class CoinController extends Controller
 {
     protected MarketSimulatorService $simulator;
 
-    public function __construct(MarketSimulatorService $simulator)
+    protected CryptoPriceService $prices;
+
+    public function __construct(MarketSimulatorService $simulator, CryptoPriceService $prices)
     {
         $this->simulator = $simulator;
+        $this->prices = $prices;
     }
 
     public function index()
     {
+        $this->simulator->syncLiveCoinPrices();
+
         $coins = Coin::where('is_active', true)
             ->orderBy('market_cap', 'desc')
             ->paginate(15);
@@ -40,6 +45,7 @@ class CoinController extends Controller
 
         // Tick auto coins if needed
         $this->simulator->tickCoin($coin);
+        $this->simulator->syncLiveCoinPrices();
 
         $recentTrades = CoinTrade::where('coin_id', $coin->id)
             ->latest()
@@ -53,7 +59,7 @@ class CoinController extends Controller
                 ->first();
         }
 
-        $solPrice = (float) PlatformSetting::get('sol_usd_price', 142.50);
+        $solPrice = $this->prices->solUsd();
 
         return view('coins.show', compact('coin', 'recentTrades', 'userHolding', 'solPrice'));
     }

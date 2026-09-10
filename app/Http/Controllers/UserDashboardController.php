@@ -3,20 +3,33 @@
 namespace App\Http\Controllers;
 
 use App\Models\Coin;
-use App\Models\PlatformSetting;
 use App\Models\Swap;
 use App\Models\UserHolding;
+use App\Services\CryptoPriceService;
+use App\Services\MarketSimulatorService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class UserDashboardController extends Controller
 {
+    protected CryptoPriceService $prices;
+
+    protected MarketSimulatorService $simulator;
+
+    public function __construct(CryptoPriceService $prices, MarketSimulatorService $simulator)
+    {
+        $this->prices = $prices;
+        $this->simulator = $simulator;
+    }
+
     public function index(Request $request)
     {
         $user = Auth::user();
 
-        $btcPriceUsd = (float) PlatformSetting::get('btc_usd_price', 66450.00);
-        $solPriceUsd = (float) PlatformSetting::get('sol_usd_price', 142.50);
+        $this->simulator->syncLiveCoinPrices();
+
+        $btcPriceUsd = $this->prices->btcUsd();
+        $solPriceUsd = $this->prices->solUsd();
 
         $holdings = UserHolding::with('coin')
             ->where('user_id', $user->id)

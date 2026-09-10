@@ -9,6 +9,7 @@ use App\Models\PlatformSetting;
 use App\Models\Swap;
 use App\Models\UserHolding;
 use App\Models\Withdrawal;
+use App\Services\CryptoPriceService;
 use App\Services\MarketSimulatorService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,16 +18,21 @@ class WalletController extends Controller
 {
     protected MarketSimulatorService $simulator;
 
-    public function __construct(MarketSimulatorService $simulator)
+    protected CryptoPriceService $prices;
+
+    public function __construct(MarketSimulatorService $simulator, CryptoPriceService $prices)
     {
         $this->simulator = $simulator;
+        $this->prices = $prices;
     }
 
     public function index(Request $request)
     {
         $user = Auth::user();
 
-        $btcPriceUsd = (float) PlatformSetting::get('btc_usd_price', 66450.00);
+        $this->simulator->syncLiveCoinPrices();
+
+        $btcPriceUsd = $this->prices->btcUsd();
         $swapFeePercent = (float) PlatformSetting::get('swap_fee_percent', 1.00);
         $withdrawalNetworkFee = (float) PlatformSetting::get('btc_withdrawal_fee', 0.000300);
 
@@ -38,7 +44,7 @@ class WalletController extends Controller
 
         // Calculate total balance valuation in BTC
         // user->btc_balance + holdings in BTC + SOL in BTC
-        $solPriceUsd = (float) PlatformSetting::get('sol_usd_price', 142.50);
+        $solPriceUsd = $this->prices->solUsd();
         $solValueBtc = ($user->sol_balance * $solPriceUsd) / $btcPriceUsd;
 
         $holdingsValueUsd = 0;
@@ -124,7 +130,7 @@ class WalletController extends Controller
             return response()->json(['error' => 'Coin not found'], 404);
         }
 
-        $btcUsd = (float) PlatformSetting::get('btc_usd_price', 66450.00);
+        $btcUsd = $this->prices->btcUsd();
         $swapFeePercent = (float) PlatformSetting::get('swap_fee_percent', 1.00);
 
         $usdValue = $amount * $coin->current_price;

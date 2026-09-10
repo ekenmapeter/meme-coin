@@ -13,6 +13,7 @@ class Coin extends Model
     protected $fillable = [
         'name',
         'ticker',
+        'coingecko_id',
         'description',
         'logo_path',
         'contract_address',

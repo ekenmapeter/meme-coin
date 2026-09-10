@@ -121,6 +121,16 @@
             </div>
 
             <div class="input-group">
+                <label class="input-label">CoinGecko ID <span style="color: var(--text-muted); font-weight: 400;">(optional — enables live prices)</span></label>
+                <div class="input-field-wrap">
+                    <input type="text" name="coingecko_id" value="{{ old('coingecko_id', $coin->coingecko_id ?? '') }}" maxlength="60">
+                </div>
+                <p style="margin-top: 4px; font-size: 0.75rem; color: var(--text-muted);">
+                    When set, the coin's price, market cap, volume and 24h change are pulled live from CoinGecko and simulated auto-movement is disabled.
+                </p>
+            </div>
+
+            <div class="input-group">
                 <label class="input-label">Description</label>
                 <div class="input-field-wrap">
                     <textarea name="description" rows="2" style="width: 100%; background: transparent; border: none; color: var(--text-primary); font-family: inherit;">{{ old('description', $coin->description) }}</textarea>

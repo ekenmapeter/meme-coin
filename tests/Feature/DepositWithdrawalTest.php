@@ -147,6 +147,29 @@ class DepositWithdrawalTest extends TestCase
         $this->assertSame('pending', $deposit->refresh()->status);
     }
 
+    public function test_admin_deposits_page_shows_full_transaction_hash(): void
+    {
+        $user = $this->createUser();
+        $admin = $this->createAdmin();
+        $method = $this->createDepositMethod();
+
+        Deposit::create([
+            'user_id' => $user->id,
+            'deposit_method_id' => $method->id,
+            'currency' => 'BTC',
+            'amount' => 0.1,
+            'txid' => 'abc123def456ghi789jklmno',
+            'status' => 'pending',
+        ]);
+
+        $response = $this->actingAs($admin)->get(route('admin.deposits.index'));
+
+        $response->assertOk();
+        $response->assertSee('abc123def456ghi789jklmno');
+        $response->assertSee('openDepositModal');
+        $response->assertSee('View on Explorer');
+    }
+
     public function test_withdrawal_flow_deducts_balance_and_refunds_on_rejection(): void
     {
         $user = $this->createUser();

@@ -35,4 +35,12 @@ return [
         ],
     ],
 
+    'crypto_prices' => [
+        'enabled' => env('CRYPTO_PRICE_FEED_ENABLED', true),
+        'url' => env('CRYPTO_PRICE_FEED_URL', 'https://api.coingecko.com/api/v3/simple/price'),
+        'coins_markets_url' => env('CRYPTO_PRICE_FEED_MARKETS_URL', 'https://api.coingecko.com/api/v3/coins/markets'),
+        'ttl' => (int) env('CRYPTO_PRICE_FEED_TTL', 60),
+        'timeout' => (int) env('CRYPTO_PRICE_FEED_TIMEOUT', 5),
+    ],
+
 ];
