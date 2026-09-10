@@ -147,7 +147,7 @@ class AdminTest extends TestCase
             'platform_name' => 'Pump Endless',
             'platform_announcement' => 'Fees updated',
             'site_name' => 'Pump Endless Pro',
-            'site_description' => 'A branded demo platform.',
+            'site_description' => 'A branded trading platform.',
         ])->assertSessionHas('success');
 
         $this->assertDatabaseHas('platform_settings', ['key' => 'swap_fee_percent', 'value' => '2.5']);

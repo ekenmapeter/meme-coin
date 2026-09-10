@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
 {
@@ -63,7 +64,7 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required|string|max:50',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => ['required', 'string', 'confirmed', Password::default()],
         ]);
 
         $wallet = '0x'.Str::random(16);
@@ -76,7 +77,7 @@ class AuthController extends Controller
             'role' => User::ROLE_USER,
         ]);
 
-        // New accounts start with no simulated funds; balances are only granted
+        // New accounts start with no funds; balances are only granted
         // via confirmed deposits or admin balance adjustments.
         $user->sol_balance = 0.0;
         $user->btc_balance = 0.0;

@@ -201,7 +201,7 @@ class AdminCoinController extends Controller
     }
 
     /**
-     * Instantly simulate a Buy or Sell order.
+     * Instantly inject a Buy or Sell order.
      */
     public function simulateTrade(Request $request, Coin $coin)
     {

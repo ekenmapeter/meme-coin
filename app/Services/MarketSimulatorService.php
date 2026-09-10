@@ -184,7 +184,7 @@ class MarketSimulatorService
     }
 
     /**
-     * User executes demo Buy or Sell.
+     * User executes a Buy or Sell.
      */
     public function executeUserTrade(User $user, Coin $coin, string $type, float $amount, string $currency = 'SOL'): array
     {

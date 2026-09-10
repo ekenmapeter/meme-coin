@@ -8,7 +8,7 @@
         <div style="text-align: center; margin-bottom: 24px;">
             <div style="font-size: 2.5rem; margin-bottom: 8px;"><i class="fa-solid fa-rocket"></i></div>
             <h1 style="font-size: 1.8rem; font-weight: 800;">Welcome Back</h1>
-            <p style="color: var(--text-secondary); font-size: 0.9rem;">Sign in to your Pump Endless demo trader account</p>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">Sign in to your Pump Endless trader account</p>
         </div>
 
         <form action="{{ route('login') }}" method="POST">

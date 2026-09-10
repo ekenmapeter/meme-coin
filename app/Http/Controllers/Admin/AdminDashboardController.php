@@ -40,7 +40,7 @@ class AdminDashboardController extends Controller
         $recentDeposits = Deposit::with('user')->latest()->take(5)->get();
         $recentWithdrawals = Withdrawal::with('user')->latest()->take(5)->get();
 
-        // Top traders by simulated volume, derived from live trade data.
+        // Top traders by trading volume, derived from live trade data.
         $topTraders = CoinTrade::query()
             ->whereNotNull('user_id')
             ->with('user')

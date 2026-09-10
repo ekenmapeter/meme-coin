@@ -21,15 +21,15 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/search', [HomeController::class, 'search'])->name('search');
-Route::get('/api/market/live', [HomeController::class, 'liveMarket'])->name('api.market.live');
+Route::get('/search', [HomeController::class, 'search'])->middleware('throttle:public')->name('search');
+Route::get('/api/market/live', [HomeController::class, 'liveMarket'])->middleware('throttle:public')->name('api.market.live');
 
 // Coin & Trading
 Route::get('/coins', [CoinController::class, 'index'])->name('coins.index');
 Route::get('/coins/{ticker}', [CoinController::class, 'show'])->name('coins.show');
-Route::get('/api/coins/{ticker}/chart', [CoinController::class, 'chartData'])->name('api.coins.chart');
-Route::get('/api/coins/{ticker}/trades', [CoinController::class, 'trades'])->name('api.coins.trades');
-Route::post('/coins/{ticker}/trade', [CoinController::class, 'trade'])->name('coins.trade');
+Route::get('/api/coins/{ticker}/chart', [CoinController::class, 'chartData'])->middleware('throttle:public')->name('api.coins.chart');
+Route::get('/api/coins/{ticker}/trades', [CoinController::class, 'trades'])->middleware('throttle:public')->name('api.coins.trades');
+Route::post('/coins/{ticker}/trade', [CoinController::class, 'trade'])->middleware('throttle:trades')->name('coins.trade');
 
 /*
 |--------------------------------------------------------------------------
@@ -69,10 +69,10 @@ Route::middleware(['auth', 'active'])->group(function () {
         return redirect()->route('wallet.index', ['tab' => 'withdraw']);
     })->name('withdraw');
 
-    Route::get('/api/swap/quote', [WalletController::class, 'swapQuote'])->name('api.swap.quote');
-    Route::post('/wallet/swap', [WalletController::class, 'submitSwap'])->name('wallet.swap');
-    Route::post('/wallet/deposit', [WalletController::class, 'submitDeposit'])->name('wallet.deposit');
-    Route::post('/wallet/withdraw', [WalletController::class, 'submitWithdrawal'])->name('wallet.withdraw');
+    Route::get('/api/swap/quote', [WalletController::class, 'swapQuote'])->middleware('throttle:wallet')->name('api.swap.quote');
+    Route::post('/wallet/swap', [WalletController::class, 'submitSwap'])->middleware('throttle:wallet')->name('wallet.swap');
+    Route::post('/wallet/deposit', [WalletController::class, 'submitDeposit'])->middleware('throttle:wallet')->name('wallet.deposit');
+    Route::post('/wallet/withdraw', [WalletController::class, 'submitWithdrawal'])->middleware('throttle:wallet')->name('wallet.withdraw');
 
     // Coin launch requires an authenticated account so creator holdings can be granted
     Route::get('/launch', [CoinController::class, 'launch'])->name('coins.launch');

@@ -61,6 +61,18 @@ class AuthTest extends TestCase
         $this->assertDatabaseMissing('users', ['email' => 'new@example.com']);
     }
 
+    public function test_registration_rejects_passwords_without_numbers(): void
+    {
+        $this->post(route('register'), [
+            'name' => 'MoonDegen',
+            'email' => 'letters@example.com',
+            'password' => 'onlyletters',
+            'password_confirmation' => 'onlyletters',
+        ])->assertSessionHasErrors('password');
+
+        $this->assertDatabaseMissing('users', ['email' => 'letters@example.com']);
+    }
+
     public function test_registration_cannot_promote_to_admin(): void
     {
         $this->post(route('register'), [

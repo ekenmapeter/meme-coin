@@ -1,6 +1,6 @@
 @php
     $siteName = \App\Models\PlatformSetting::get('site_name', 'Pump Endless');
-    $siteDescription = \App\Models\PlatformSetting::get('site_description', 'Pump Endless – a high-speed demo meme-coin launch & trading platform. All prices and activity are simulated.');
+    $siteDescription = \App\Models\PlatformSetting::get('site_description', 'Pump Endless – a high-speed meme-coin launch & trading platform.');
     $siteLogo = \App\Models\PlatformSetting::get('site_logo');
     $siteIcon = \App\Models\PlatformSetting::get('site_icon', 'images/coins/pepeking.svg');
     $user = Auth::user();
@@ -142,31 +142,16 @@
                 <span class="text-white font-extrabold text-lg">{{ $siteName }}</span>
             </div>
 
-            <p class="text-slate-400 text-sm max-w-xl text-center leading-relaxed">
-                The fastest demo meme-coin launchpad. Launch tokens, trade with simulated SOL,
-                and swap to BTC — all in one place.
-            </p>
-
             <div class="flex gap-3">
                 <a href="#" class="footer-social" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
                 <a href="#" class="footer-social" aria-label="Telegram"><i class="fa-brands fa-telegram"></i></a>
                 <a href="#" class="footer-social" aria-label="Discord"><i class="fa-brands fa-discord"></i></a>
                 <a href="#" class="footer-social" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
             </div>
-
-            <p class="text-slate-500 text-xs flex items-center gap-2">
-                <i class="fa-solid fa-triangle-exclamation text-amber-400"></i>
-                Simulation only. All prices, balances and activity are fictional.
-            </p>
         </div>
 
         <div class="max-w-[1440px] mx-auto mt-8 pt-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-center gap-3 text-xs text-slate-500">
             <span>&copy; {{ date('Y') }} {{ $siteName }}. All rights reserved.</span>
-            <span class="hidden md:inline">•</span>
-            <span class="flex items-center gap-2">
-                <span class="status-dot" style="background:#22c55e"></span>
-                Simulated demo environment
-            </span>
         </div>
     </footer>
 
@@ -192,12 +177,12 @@
 
     <!-- ===== Mobile Drawer (Alpine) ===== -->
     <div x-cloak x-show="drawerOpen" x-transition.opacity
-         class="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm md:hidden" @click="drawerOpen = false"></div>
+         class="fixed inset-0 z-[105] bg-black/60 backdrop-blur-sm md:hidden" @click="drawerOpen = false"></div>
     <aside x-cloak x-show="drawerOpen" x-transition:enter="transition ease-out duration-300"
            x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
            x-transition:leave="transition ease-in duration-200" x-transition:leave-start="translate-x-0"
            x-transition:leave-end="translate-x-full"
-           class="fixed right-0 top-0 z-[70] h-full w-[82%] max-w-sm drawer-panel md:hidden">
+           class="fixed right-0 top-0 z-[110] h-full w-[82%] max-w-sm drawer-panel md:hidden">
         <div class="flex items-center justify-between p-5 border-b border-white/10">
             <div class="flex items-center gap-3">
                 @if($siteLogo)
@@ -207,7 +192,7 @@
                 @endif
                 <div>
                     <div class="font-bold text-white">{{ $siteName }}</div>
-                    <div class="text-xs text-slate-400">Demo Trading Platform</div>
+                    <div class="text-xs text-slate-400">Trading Platform</div>
                 </div>
             </div>
             <button type="button" class="text-slate-400 hover:text-white text-xl" @click="drawerOpen = false" aria-label="Close menu">

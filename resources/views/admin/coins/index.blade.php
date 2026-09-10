@@ -9,7 +9,7 @@
     <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; margin-bottom: 20px;">
         <div>
             <h3 style="font-size: 1.25rem; font-weight: 800;">All Meme Coins</h3>
-            <p style="color: var(--text-muted); font-size: 0.85rem;">Manage prices, simulated bonding curves, auto movements, and featured badges.</p>
+            <p style="color: var(--text-muted); font-size: 0.85rem;">Manage prices, bonding curves, auto movements, and featured badges.</p>
         </div>
 
         <a href="{{ route('admin.coins.create') }}" class="btn btn-primary">

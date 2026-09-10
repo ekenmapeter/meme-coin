@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Pump Endless – Launch, Trade, Moon (Demo Meme Coin Platform)')
+@section('title', 'Pump Endless – Launch, Trade, Moon')
 
 @section('content')
 
@@ -13,7 +13,7 @@
                 <span class="highlight">Moon.</span>
             </h1>
             <p class="hero-subtitle">
-                The best place to launch and trade meme coins. 100% fair launch, bonding curve mechanics, and instant simulated liquidity.
+                The best place to launch and trade meme coins. 100% fair launch, bonding curve mechanics, and instant liquidity.
             </p>
             <div class="hero-actions">
                 <a href="{{ route('coins.launch') }}" class="btn btn-primary btn-lg">
@@ -187,7 +187,7 @@
             <div style="font-size: 2.2rem; margin-bottom: 12px;"><i class="fa-solid fa-rocket"></i></div>
             <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 8px;">1. Launch Instant Coins</h3>
             <p style="color: var(--text-secondary); font-size: 0.9rem;">
-                Create any meme coin in 10 seconds. Set the name, ticker, and upload a badge. It launches instantly on our high-speed simulated bonding curve.
+                Create any meme coin in 10 seconds. Set the name, ticker, and upload a badge. It launches instantly on our high-speed bonding curve.
             </p>
         </div>
 
@@ -195,7 +195,7 @@
             <div style="font-size: 2.2rem; margin-bottom: 12px;"><i class="fa-solid fa-chart-line"></i></div>
             <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 8px;">2. Buy, Sell & Moon</h3>
             <p style="color: var(--text-secondary); font-size: 0.9rem;">
-                Trade simulated SOL for tokens. As buying pressure mounts, the price automatically moves up and market cap surges with realistic candlestick charts.
+                Trade SOL for tokens. As buying pressure mounts, the price automatically moves up and market cap surges with realistic candlestick charts.
             </p>
         </div>
 
@@ -203,7 +203,7 @@
             <div style="font-size: 2.2rem; margin-bottom: 12px;"><i class="fa-solid fa-bitcoin-sign"></i></div>
             <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 8px;">3. Swap to Bitcoin & Withdraw</h3>
             <p style="color: var(--text-secondary); font-size: 0.9rem;">
-                Lock in your meme coin profits by swapping directly to Bitcoin inside your demo wallet, then submit withdrawal requests.
+                Lock in your meme coin profits by swapping directly to Bitcoin inside your wallet, then submit withdrawal requests.
             </p>
         </div>
     </div>

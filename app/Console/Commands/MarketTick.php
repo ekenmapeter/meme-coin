@@ -19,7 +19,7 @@ class MarketTick extends Command
      *
      * @var string
      */
-    protected $description = 'Advance the simulated market: ticks all auto-movement coins.';
+    protected $description = 'Advance the market: ticks all auto-movement coins.';
 
     /**
      * Execute the console command.
@@ -29,7 +29,7 @@ class MarketTick extends Command
         $ticked = $simulator->tickAllCoins();
         $synced = $simulator->syncLiveCoinPrices();
 
-        $this->info("Market tick complete. {$ticked} coin(s) simulated, {$synced} coin(s) synced from live prices.");
+        $this->info("Market tick complete. {$ticked} coin(s) ticked, {$synced} coin(s) synced from live prices.");
 
         return self::SUCCESS;
     }

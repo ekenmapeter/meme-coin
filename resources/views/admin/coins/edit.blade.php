@@ -31,14 +31,14 @@
             </form>
         </div>
 
-        <!-- Simulated Trade Injector -->
+        <!-- Trade Injector -->
         <div class="widget-card" style="margin-bottom: 20px;">
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
-                <h3 style="font-size: 1.15rem; font-weight: 800;"><i class="fa-solid fa-dice"></i> Inject Simulated Trade</h3>
-                <span style="font-size: 0.8rem; color: var(--text-muted);">Bot Tape</span>
+                <h3 style="font-size: 1.15rem; font-weight: 800;"><i class="fa-solid fa-dice"></i> Inject Market Trade</h3>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Trade Tape</span>
             </div>
             <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 16px;">
-                Inject a simulated Buy or Sell transaction. This records to the recent trades stream and dynamically nudges the bonding curve.
+                Inject a Buy or Sell transaction. This records to the recent trades stream and dynamically nudges the bonding curve.
             </p>
 
             <form action="{{ route('admin.coins.simulateTrade', $coin->id) }}" method="POST">
@@ -126,7 +126,7 @@
                     <input type="text" name="coingecko_id" value="{{ old('coingecko_id', $coin->coingecko_id ?? '') }}" maxlength="60">
                 </div>
                 <p style="margin-top: 4px; font-size: 0.75rem; color: var(--text-muted);">
-                    When set, the coin's price, market cap, volume and 24h change are pulled live from CoinGecko and simulated auto-movement is disabled.
+                    When set, the coin's price, market cap, volume and 24h change are pulled live from CoinGecko and auto-movement is disabled.
                 </p>
             </div>
 

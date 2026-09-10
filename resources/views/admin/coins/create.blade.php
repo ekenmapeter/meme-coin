@@ -8,7 +8,7 @@
 <div class="widget-card" style="max-width: 800px; margin: 0 auto;">
     <div style="margin-bottom: 24px;">
         <h3 style="font-size: 1.3rem; font-weight: 800;">Deploy New Meme Coin</h3>
-        <p style="color: var(--text-muted); font-size: 0.85rem;">All parameters will be simulated and fully controllable from your admin panel.</p>
+        <p style="color: var(--text-muted); font-size: 0.85rem;">All parameters are fully controllable from your admin panel.</p>
     </div>
 
     <form action="{{ route('admin.coins.store') }}" method="POST" enctype="multipart/form-data">
@@ -36,7 +36,7 @@
                 <input type="text" name="coingecko_id" placeholder="e.g. pepe, dogecoin, shiba-inu" value="{{ old('coingecko_id') }}" maxlength="60">
             </div>
             <p style="margin-top: 4px; font-size: 0.75rem; color: var(--text-muted);">
-                When set, the coin's price, market cap, volume and 24h change are pulled live from CoinGecko and simulated auto-movement is disabled.
+                When set, the coin's price, market cap, volume and 24h change are pulled live from CoinGecko and auto-movement is disabled.
             </p>
         </div>
 

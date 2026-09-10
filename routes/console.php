@@ -8,6 +8,6 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-// Advance the simulated market every minute.
+// Advance the market every minute.
 // Requires a cron entry: * * * * * cd /path/to/app && php artisan schedule:run >> /dev/null 2>&1
 Schedule::command('market:tick')->everyMinute();

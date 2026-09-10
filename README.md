@@ -1,18 +1,17 @@
-# Pump Endless — Meme Coin Demo Platform
+# Pump Endless — Meme Coin Launch & Trading Platform
 
-A high-speed **simulated** meme-coin launch & trading platform built with Laravel 12.
-
-> **Important:** This is a demo/simulation platform. All prices, charts, market caps,
-> balances, and trading activity are simulated. No real money, no real wallets, no real trades.
+A high-speed meme-coin launch & trading platform built with Laravel 12.
 
 ## Features
 
-- Browse and search simulated meme coins with live-updating charts (Chart.js candles)
-- Register / log in with email & password (no default credentials, no demo backdoors)
-- Buy/sell coins with simulated SOL, swap meme tokens for BTC, request deposits/withdrawals
-- Admin panel: coin management, price simulation controls, deposit/withdrawal review, user balances, platform settings
+- Browse and search meme coins with live-updating candlestick charts (Chart.js)
+- Register / log in with email & password (no default credentials, no hidden backdoors)
+- Buy/sell coins with SOL, swap meme tokens for BTC, request deposits/withdrawals
+- Automated market engine with per-coin auto-movement controls and live CoinGecko
+  price syncing for coins that have a `coingecko_id` configured
+- Admin panel: coin management, price controls, deposit/withdrawal review, user balances, platform settings, audit logs
 - Role-based access: `user` and `admin` roles (`app/Models/User.php`)
-- Scheduled market simulation (`php artisan market:tick`, every minute via the scheduler)
+- Scheduled market tick (`php artisan market:tick`, every minute via the scheduler)
 
 ## Requirements
 
@@ -37,7 +36,7 @@ Create an administrator (no default admin exists):
 php artisan admin:create --email=you@example.com --password='a-strong-password'
 ```
 
-> New accounts register with **zero** simulated funds. Funds arrive via admin-confirmed
+> New accounts register with zero balances. Funds arrive via admin-confirmed
 > deposits or admin balance adjustments — there is no free-credit registration.
 
 ## Production Deployment

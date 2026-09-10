@@ -1,6 +1,6 @@
 # Deployment Guide — Pump Endless
 
-This guide covers deploying the simulated meme-coin platform to a public server.
+This guide covers deploying the meme-coin launch & trading platform to a public server.
 
 ## 1. Server requirements
 
@@ -39,6 +39,7 @@ Set at minimum:
 | `SESSION_DRIVER` | `database` |
 | `SESSION_SECURE_COOKIE` | `true` (only when HTTPS is configured) |
 | `TRUSTED_PROXIES` | your reverse proxy IP/CIDR (e.g. hosting proxy, Cloudflare) when applicable |
+| `FORCE_HTTPS` | `true` when serving over TLS (requires `TRUSTED_PROXIES` behind a proxy) |
 
 ## 4. Database
 
@@ -52,7 +53,7 @@ There is **no default admin** — create one with the command above.
 New users register with zero balances; funds are granted only through admin-confirmed
 deposits or admin balance adjustments.
 
-## 5. Scheduler (required for market simulation)
+## 5. Scheduler (required for the market engine)
 
 Add a cron entry:
 
@@ -60,7 +61,7 @@ Add a cron entry:
 * * * * * cd /path/to/app && php artisan schedule:run >> /dev/null 2>&1
 ```
 
-This runs `market:tick` every minute, advancing simulated prices. Without it, coin
+This runs `market:tick` every minute, advancing auto-movement prices. Without it, coin
 prices only move when a user visits a coin page.
 
 ## 6. Queue
@@ -85,18 +86,26 @@ php artisan view:cache
 
 - Terminate TLS at your reverse proxy and set `TRUSTED_PROXIES` accordingly.
 - The app sends these headers on every response (see `app/Http/Middleware/SecurityHeaders.php`):
-  `X-Content-Type-Options`, `X-Frame-Options: DENY`, `Referrer-Policy`, `Permissions-Policy`.
+  `X-Content-Type-Options`, `X-Frame-Options: DENY`, `Referrer-Policy`, `Permissions-Policy`,
+  and `Strict-Transport-Security` (HSTS) on secure responses.
+- Enable `FORCE_HTTPS=true` so every insecure request is redirected to HTTPS
+  (`app/Http/Middleware/ForceHttps.php`, opt-in via config to avoid redirect loops).
 - Auth endpoints are rate-limited (5 attempts/minute per IP+email, see `AppServiceProvider`).
+- Trading, swap, deposit and withdrawal endpoints are rate-limited (`throttle:trades` /
+  `throttle:wallet`), and public polling endpoints (`/api/market/live`, charts, search) are
+  rate-limited (`throttle:public`).
+- Password policy: minimum 8 characters with letters and numbers
+  (`Illuminate\Validation\Rules\Password` defaults, `AppServiceProvider`).
 - A full Content-Security-Policy is intentionally **not** shipped because the frontend
   uses inline scripts and CDN libraries; add one at the reverse-proxy layer if you can
   refactor the frontend to use external files.
 
 ## 9. Production do/don't
 
-- Do: keep `APP_DEBUG=false`, `SESSION_SECURE_COOKIE=true`, HTTPS-only cookies.
+- Do: keep `APP_DEBUG=false`, `SESSION_ENCRYPT=true`, `SESSION_SECURE_COOKIE=true`, HTTPS-only cookies.
 - Don't: commit `.env`, `vendor/`, or `storage/logs` to the repository.
-- Don't: ever re-introduce the removed one-click "connect as admin" or demo-trader
-  auto-login flows — both were removed for security (`AuthController`, `routes/web.php`).
+- Don't: ever re-introduce the removed one-click "connect as admin" or auto-login
+  flows — both were removed for security (`AuthController`, `routes/web.php`).
 - Don't: hard-delete coins — the delete endpoint was removed; deactivate instead
   (`admin.coins.deactivate`), which blocks new trades but preserves user holdings.
 

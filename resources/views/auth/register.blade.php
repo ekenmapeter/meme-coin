@@ -8,7 +8,7 @@
         <div style="text-align: center; margin-bottom: 24px;">
             <div style="font-size: 2.5rem; margin-bottom: 8px;"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
             <h1 style="font-size: 1.8rem; font-weight: 800;">Create Account</h1>
-            <p style="color: var(--text-secondary); font-size: 0.9rem;">Join Pump Endless and start trading simulated meme coins</p>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">Join Pump Endless and start trading meme coins</p>
         </div>
 
         <form action="{{ route('register') }}" method="POST">

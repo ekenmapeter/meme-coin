@@ -286,7 +286,7 @@
             <div class="widget-card">
                 <h3 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 12px;">About {{ $coin->name }}</h3>
                 <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; margin-bottom: 20px;">
-                    {{ $coin->description ?: 'Community-driven decentralized meme coin on Solana with automated simulated bonding curve and zero dev transaction tax.' }}
+                    {{ $coin->description ?: 'Community-driven decentralized meme coin on Solana with automated bonding curve and zero dev transaction tax.' }}
                 </p>
 
                 <div style="display: flex; flex-direction: column; gap: 12px; font-size: 0.88rem;">

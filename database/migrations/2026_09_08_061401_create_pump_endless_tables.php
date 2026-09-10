@@ -60,7 +60,7 @@ return new class extends Migration
             $table->unique(['user_id', 'coin_id']);
         });
 
-        // Coin Trades (for live simulated & user buy/sell tape)
+        // Coin Trades (for live & user buy/sell tape)
         Schema::create('coin_trades', function (Blueprint $table) {
             $table->id();
             $table->foreignId('coin_id')->constrained()->onDelete('cascade');

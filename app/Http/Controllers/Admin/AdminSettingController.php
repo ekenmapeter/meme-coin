@@ -19,9 +19,9 @@ class AdminSettingController extends Controller
             'btc_usd_price' => PlatformSetting::get('btc_usd_price', '66450.00'),
             'sol_usd_price' => PlatformSetting::get('sol_usd_price', '142.50'),
             'platform_name' => PlatformSetting::get('platform_name', 'Pump Endless'),
-            'platform_announcement' => PlatformSetting::get('platform_announcement', 'Welcome to Pump Endless Demo Platform!'),
+            'platform_announcement' => PlatformSetting::get('platform_announcement', 'Welcome to Pump Endless!'),
             'site_name' => PlatformSetting::get('site_name', 'Pump Endless'),
-            'site_description' => PlatformSetting::get('site_description', 'Pump Endless – a high-speed demo meme-coin launch & trading platform.'),
+            'site_description' => PlatformSetting::get('site_description', 'Pump Endless – a high-speed meme-coin launch & trading platform.'),
             'site_logo' => PlatformSetting::get('site_logo'),
             'site_icon' => PlatformSetting::get('site_icon'),
         ];

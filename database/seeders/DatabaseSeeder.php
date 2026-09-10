@@ -23,9 +23,9 @@ class DatabaseSeeder extends Seeder
         PlatformSetting::set('btc_usd_price', '66450.00');
         PlatformSetting::set('sol_usd_price', '142.50');
         PlatformSetting::set('platform_name', 'Pump Endless');
-        PlatformSetting::set('platform_announcement', 'Welcome to Pump Endless! Trade simulated meme coins at lightning speed.');
+        PlatformSetting::set('platform_announcement', 'Welcome to Pump Endless! Trade meme coins at lightning speed.');
         PlatformSetting::set('site_name', 'Pump Endless');
-        PlatformSetting::set('site_description', 'Pump Endless – a high-speed demo meme-coin launch & trading platform. All prices and activity are simulated.');
+        PlatformSetting::set('site_description', 'Pump Endless – a high-speed meme-coin launch & trading platform.');
 
         // 2. Deposit Methods (BTC & SOL only — each currency is credited to its matching balance)
         $btcMethod = DepositMethod::create([
@@ -56,7 +56,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'PEPEKING',
                 'ticker' => 'PEPE',
                 'coingecko_id' => 'pepe',
-                'description' => 'The king of all Pepes. Built for the meme revolution with simulated zero tax and high bonding curve momentum.',
+                'description' => 'The king of all Pepes. Built for the meme revolution with zero tax and high bonding curve momentum.',
                 'logo_path' => 'pepeking.png',
                 'contract_address' => '8x1234abcd5678ef90gh12ij34kl56mn78',
                 'network' => 'Solana',
@@ -287,8 +287,8 @@ class DatabaseSeeder extends Seeder
 
         $pepeCoin = $createdCoins['PEPE'];
 
-        // 6. Seed Simulated Recent Trades for PEPEKING (matching coin-page.png)
-        $simulatedTrades = [
+        // 6. Seed Recent Trades for PEPEKING (matching coin-page.png)
+        $seedTrades = [
             ['wallet' => '0x8f4d9a1b2c3d4e5f', 'type' => 'buy', 'usd' => 245.32, 'tokens' => 1250000000, 'time' => 2],
             ['wallet' => '0x3e8a1c4d5b6f7a8b', 'type' => 'buy', 'usd' => 125.00, 'tokens' => 640200000, 'time' => 5],
             ['wallet' => '0x16ae7f8a9b0c1d2e', 'type' => 'sell', 'usd' => 532.10, 'tokens' => 2650000000, 'time' => 8],
@@ -299,7 +299,7 @@ class DatabaseSeeder extends Seeder
             ['wallet' => '0x5e6f7a8b9c0d1e2f', 'type' => 'sell', 'usd' => 310.20, 'tokens' => 1266000000, 'time' => 50],
         ];
 
-        foreach ($simulatedTrades as $trade) {
+        foreach ($seedTrades as $trade) {
             CoinTrade::create([
                 'coin_id' => $pepeCoin->id,
                 'wallet_address' => $trade['wallet'],
@@ -311,7 +311,7 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // 8. Simulated trades for other coins
+        // 8. Recent trades for other coins
         foreach ($createdCoins as $ticker => $c) {
             if ($ticker === 'PEPE') {
                 continue;

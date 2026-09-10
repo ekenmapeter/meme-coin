@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\EnsureUserIsActive;
+use App\Http\Middleware\ForceHttps;
 use App\Http\Middleware\SecurityHeaders;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -19,6 +20,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'active' => EnsureUserIsActive::class,
             'security-headers' => SecurityHeaders::class,
         ]);
+
+        $middleware->append(ForceHttps::class);
+        $middleware->append(SecurityHeaders::class);
 
         $trustedProxies = array_filter(array_map('trim', explode(',', (string) env('TRUSTED_PROXIES', ''))));
         $middleware->trustProxies(at: $trustedProxies ?: []);

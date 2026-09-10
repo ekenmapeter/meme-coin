@@ -11,7 +11,7 @@
             <span>All Coins</span>
         </h2>
         <div style="color: var(--text-muted); font-size: 0.85rem;">
-            {{ $coins->total() }} active markets • live simulated prices
+            {{ $coins->total() }} active markets • live prices
         </div>
     </div>
 

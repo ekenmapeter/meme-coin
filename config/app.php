@@ -56,6 +56,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Force HTTPS
+    |--------------------------------------------------------------------------
+    |
+    | When enabled, insecure requests are redirected to HTTPS. Only enable it
+    | when the app is actually served over TLS. Behind a reverse proxy you
+    | must also set TRUSTED_PROXIES so forwarded proto headers are honored.
+    |
+    */
+
+    'force_https' => env('FORCE_HTTPS', false),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------
     |

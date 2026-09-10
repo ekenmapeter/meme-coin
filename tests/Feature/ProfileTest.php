@@ -65,11 +65,11 @@ class ProfileTest extends TestCase
 
         $this->actingAs($user)->post(route('profile.password'), [
             'current_password' => 'password',
-            'password' => 'new-secure-pass',
-            'password_confirmation' => 'new-secure-pass',
+            'password' => 'new-secure-pass-123',
+            'password_confirmation' => 'new-secure-pass-123',
         ])->assertSessionHas('success');
 
-        $this->assertTrue(Hash::check('new-secure-pass', $user->refresh()->password));
+        $this->assertTrue(Hash::check('new-secure-pass-123', $user->refresh()->password));
     }
 
     public function test_password_change_rejects_wrong_current_password(): void
@@ -78,8 +78,8 @@ class ProfileTest extends TestCase
 
         $this->actingAs($user)->post(route('profile.password'), [
             'current_password' => 'nope',
-            'password' => 'new-secure-pass',
-            'password_confirmation' => 'new-secure-pass',
+            'password' => 'new-secure-pass-123',
+            'password_confirmation' => 'new-secure-pass-123',
         ])->assertSessionHasErrors('current_password');
     }
 

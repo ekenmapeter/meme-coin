@@ -75,8 +75,8 @@
 
     <div class="widget-card" style="max-width: 720px; margin: 0 auto;">
         <div style="margin-bottom: 24px;">
-            <h3 style="font-size: 1.3rem; font-weight: 800;"><i class="fa-solid fa-sliders"></i> Fees & Simulation Rates</h3>
-            <p style="color: var(--text-muted); font-size: 0.85rem;">Adjust platform swap fees, network fees, simulated base rates, and announcement text.</p>
+            <h3 style="font-size: 1.3rem; font-weight: 800;"><i class="fa-solid fa-sliders"></i> Fees & Rates</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem;">Adjust platform swap fees, network fees, base rates, and announcement text.</p>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
